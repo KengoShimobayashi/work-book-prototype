@@ -1,0 +1,2784 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="theme-color" content="#f0f7f4" />
+    <title>Minori - 知識を実らせよう</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f0f7f4;
+        --surface: #ffffff;
+        --surface2: #e8f2ed;
+        --border: rgba(45, 90, 70, 0.1);
+        --text: #1a3328;
+        --text-muted: #6b8a7a;
+        --text-dim: #4a6b5a;
+        --accent: #3d9970;
+        --accent-light: #5ab88a;
+        --accent2: #5aa5c8;
+        --accent3: #c8a855;
+        --pill-bg: rgba(61, 153, 112, 0.1);
+        --pill-border: rgba(61, 153, 112, 0.25);
+        --glow: rgba(61, 153, 112, 0.15);
+        --gradient-start: #7ec8c8;
+        --gradient-end: #90d4a0;
+        --radius: 20px;
+        --radius-sm: 12px;
+        --safe-top: env(safe-area-inset-top, 0px);
+        --safe-bottom: env(safe-area-inset-bottom, 0px);
+        --safe-left: env(safe-area-inset-left, 0px);
+        --safe-right: env(safe-area-inset-right, 0px);
+        --header-h: 56px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+      html,
+      body {
+        height: 100%;
+        overscroll-behavior: none;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background:
+          radial-gradient(
+            ellipse 70% 50% at 90% 10%,
+            rgba(126, 200, 200, 0.15) 0%,
+            transparent 60%
+          ),
+          radial-gradient(
+            ellipse 60% 60% at 5% 90%,
+            rgba(144, 212, 160, 0.12) 0%,
+            transparent 60%
+          );
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      /* ════ HEADER ════ */
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        height: calc(var(--header-h) + var(--safe-top));
+        padding: calc(var(--safe-top) + 10px) calc(16px + var(--safe-right))
+          10px calc(16px + var(--safe-left));
+        background: rgba(240, 247, 244, 0.92);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-back {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text-dim);
+        font-size: 22px;
+        cursor: pointer;
+        flex-shrink: 0;
+        transition: all 0.15s;
+      }
+      .btn-back:active {
+        background: var(--surface2);
+      }
+      .show-back .btn-back {
+        display: flex;
+      }
+
+      .logo {
+        font-family: "Outfit", sans-serif;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .header-center {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+      }
+      .header-theme {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: 0.5px;
+      }
+      .header-topic {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .btn-home {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 18px;
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.15s;
+      }
+      .btn-home:active {
+        background: var(--surface2);
+      }
+
+      /* ════ MAIN ════ */
+      main {
+        position: relative;
+        z-index: 1;
+        padding-top: calc(var(--header-h) + var(--safe-top));
+        padding-bottom: calc(32px + var(--safe-bottom));
+        padding-left: calc(16px + var(--safe-left));
+        padding-right: calc(16px + var(--safe-right));
+        max-width: 540px;
+        margin: 0 auto;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      /* ════ START ════ */
+      #screen-start {
+        padding-top: 32px;
+        text-align: center;
+        animation: fadeUp 0.45s ease both;
+      }
+
+      .start-logo-area {
+        margin-bottom: 24px;
+      }
+      .start-logo-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 8px 32px rgba(61, 153, 112, 0.2);
+      }
+
+      .start-eyebrow {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--accent2);
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+      }
+      .start-title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(28px, 8vw, 38px);
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.5px;
+        margin-bottom: 10px;
+        color: var(--text);
+      }
+      .start-title span {
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .start-sub {
+        color: var(--text-dim);
+        font-size: 14px;
+        line-height: 1.7;
+        margin-bottom: 36px;
+      }
+      .theme-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        text-align: left;
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+      }
+      .theme-input-wrapper {
+        position: relative;
+        margin-bottom: 24px;
+      }
+      .theme-input {
+        width: 100%;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 56px 18px 20px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 16px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+      .theme-input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px var(--glow);
+      }
+      .theme-input::placeholder {
+        color: var(--text-muted);
+      }
+      .btn-go {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        border: none;
+        border-radius: 14px;
+        color: #fff;
+        font-size: 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+        box-shadow: 0 4px 12px rgba(61, 153, 112, 0.3);
+      }
+      .btn-go:active {
+        transform: translateY(-50%) scale(0.95);
+      }
+      .example-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 12px;
+        text-align: left;
+        letter-spacing: 0.5px;
+      }
+      .example-themes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .example-chip {
+        padding: 10px 16px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        font-size: 13px;
+        color: var(--text-dim);
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+      }
+      .example-chip:active {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--pill-bg);
+      }
+
+      /* ════ TOPICS ════ */
+      #screen-topics {
+        padding-top: 24px;
+        animation: fadeUp 0.35s ease both;
+      }
+      .screen-heading {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--accent2);
+        letter-spacing: 1.5px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+      .screen-theme-name {
+        font-family: "Outfit", sans-serif;
+        font-size: 26px;
+        font-weight: 600;
+        line-height: 1.2;
+        margin-bottom: 4px;
+        letter-spacing: -0.3px;
+        color: var(--text);
+      }
+      .screen-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        margin-bottom: 22px;
+        line-height: 1.5;
+      }
+      .topic-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 28px;
+      }
+      .topic-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        position: relative;
+        overflow: hidden;
+        min-height: 72px;
+        user-select: none;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          transform 0.15s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+      .topic-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(
+          180deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.15s;
+        border-radius: 4px 0 0 4px;
+      }
+      .topic-card:active {
+        background: var(--surface2);
+        border-color: var(--accent);
+        transform: scale(0.99);
+      }
+      .topic-card:active::before {
+        opacity: 1;
+      }
+      .topic-icon {
+        font-size: 28px;
+        flex-shrink: 0;
+        width: 38px;
+        text-align: center;
+      }
+      .topic-info {
+        flex: 1;
+        min-width: 0;
+      }
+      .topic-name {
+        font-size: 15px;
+        font-weight: 700;
+        margin-bottom: 3px;
+        color: var(--text);
+      }
+      .topic-desc {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.4;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+      }
+      .topic-arrow {
+        color: var(--text-muted);
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .free-input-section {
+        border-top: 1px solid var(--border);
+        padding-top: 20px;
+      }
+      .free-input-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+      }
+      .free-input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .free-input {
+        flex: 1;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 16px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .free-input:focus {
+        border-color: var(--accent);
+      }
+      .free-input::placeholder {
+        color: var(--text-muted);
+      }
+      .btn-free {
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        border-radius: var(--radius-sm);
+        color: var(--accent);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 0 18px;
+        cursor: pointer;
+        white-space: nowrap;
+        min-height: 52px;
+        transition: all 0.15s;
+      }
+      .btn-free:active {
+        background: rgba(61, 153, 112, 0.2);
+      }
+
+      /* ════ DETAIL ════ */
+      #screen-detail {
+        padding-top: 18px;
+        animation: fadeUp 0.3s ease both;
+      }
+
+      /* パンくずリスト */
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 16px;
+        font-size: 12px;
+      }
+      .breadcrumb-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .breadcrumb-link {
+        color: var(--accent);
+        text-decoration: none;
+        padding: 4px 10px;
+        border-radius: 16px;
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      .breadcrumb-link:hover {
+        background: rgba(61, 153, 112, 0.15);
+      }
+      .breadcrumb-link:active {
+        transform: scale(0.97);
+      }
+      .breadcrumb-current {
+        color: var(--text);
+        font-weight: 700;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 180px;
+      }
+      .breadcrumb-sep {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+
+      .detail-label {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--accent3);
+        letter-spacing: 0.8px;
+        margin-bottom: 4px;
+      }
+      .detail-title {
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(22px, 7vw, 28px);
+        font-weight: 600;
+        line-height: 1.2;
+        letter-spacing: -0.3px;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+
+      .tag-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 14px;
+      }
+      .tag {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 500;
+      }
+      .tag-era {
+        background: rgba(90, 165, 200, 0.12);
+        color: var(--accent2);
+        border: 1px solid rgba(90, 165, 200, 0.25);
+      }
+      .tag-genre {
+        background: rgba(200, 168, 85, 0.12);
+        color: var(--accent3);
+        border: 1px solid rgba(200, 168, 85, 0.25);
+      }
+      .tag-key {
+        background: var(--pill-bg);
+        color: var(--accent);
+        border: 1px solid var(--pill-border);
+      }
+
+      .detail-content {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 24px;
+        line-height: 1.85;
+        font-size: 14px;
+        color: var(--text-dim);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+      .detail-content p {
+        margin-bottom: 12px;
+      }
+      .detail-content p:last-child {
+        margin-bottom: 0;
+      }
+      .detail-content strong {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .detail-content .highlight {
+        background: linear-gradient(
+          90deg,
+          rgba(126, 200, 200, 0.1) 0%,
+          rgba(144, 212, 160, 0.1) 100%
+        );
+        border-left: 3px solid var(--accent);
+        padding: 12px 14px;
+        margin: 14px 0;
+        border-radius: 0 12px 12px 0;
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.7;
+      }
+
+      /* ── トピックマップ ── */
+      .related-section {
+        margin-bottom: 28px;
+      }
+
+      /* グループ共通ボックス */
+      .map-group {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      }
+
+      /* 幅グループ → 関連トピック */
+      .map-group--width {
+        border-left: 4px solid var(--accent-light);
+        background: linear-gradient(
+          135deg,
+          rgba(61, 153, 112, 0.05) 0%,
+          rgba(144, 212, 160, 0.09) 100%
+        );
+        border-top: 1.5px solid rgba(61, 153, 112, 0.18);
+        border-right: 1.5px solid rgba(61, 153, 112, 0.18);
+        border-bottom: 1.5px solid rgba(61, 153, 112, 0.18);
+      }
+
+      /* バッジコンテナ */
+      .topic-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .topic-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 7px 13px 7px 9px;
+        background: rgba(61, 153, 112, 0.08);
+        border: 1.5px solid rgba(61, 153, 112, 0.2);
+        border-radius: 30px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.18s;
+      }
+      .topic-badge.is-current {
+        background: linear-gradient(
+          120deg,
+          rgba(126, 200, 200, 0.25) 0%,
+          rgba(144, 212, 160, 0.35) 100%
+        );
+        border-color: var(--accent);
+        cursor: default;
+        box-shadow: 0 2px 10px rgba(61, 153, 112, 0.2);
+      }
+      .topic-badge:not(.is-current):active {
+        background: rgba(61, 153, 112, 0.18);
+        border-color: var(--accent);
+        transform: scale(0.96);
+      }
+      .topic-badge-dot {
+        width: 6px;
+        height: 6px;
+        background: var(--accent);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .topic-badge-icon {
+        font-size: 15px;
+      }
+      .topic-badge-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text-dim);
+        line-height: 1;
+      }
+      .topic-badge.is-current .topic-badge-name {
+        color: var(--accent);
+      }
+
+      /* 深さグループ（派生）→ 枝葉スタイル */
+      .map-group--depth {
+        border-left: 4px solid var(--accent);
+        background: linear-gradient(
+          135deg,
+          rgba(61, 153, 112, 0.05) 0%,
+          rgba(144, 212, 160, 0.07) 100%
+        );
+        border-top: 1.5px solid rgba(61, 153, 112, 0.15);
+        border-right: 1.5px solid rgba(61, 153, 112, 0.15);
+        border-bottom: 1.5px solid rgba(61, 153, 112, 0.15);
+      }
+
+      /* 枝ツリー構造 */
+      .depth-branch-tree {
+        position: relative;
+        padding-left: 20px;
+      }
+      .depth-branch-trunk {
+        position: absolute;
+        left: 6px;
+        top: 8px;
+        bottom: 22px;
+        width: 2px;
+        background: linear-gradient(
+          180deg,
+          rgba(139, 90, 43, 0.55) 0%,
+          rgba(139, 90, 43, 0.1) 100%
+        );
+        border-radius: 2px;
+      }
+      .depth-branch-item {
+        position: relative;
+        margin-bottom: 7px;
+      }
+      .depth-branch-item::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 50%;
+        width: 14px;
+        height: 1.5px;
+        background: rgba(139, 90, 43, 0.4);
+      }
+      .depth-branch-item::after {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(139, 90, 43, 0.55);
+        border: 2px solid white;
+        box-shadow: 0 0 0 1px rgba(139, 90, 43, 0.25);
+      }
+      .depth-card {
+        background: var(--bg);
+        border: 1.5px solid rgba(61, 153, 112, 0.18);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .depth-card:active {
+        background: rgba(61, 153, 112, 0.08);
+        border-color: var(--accent);
+        transform: translateX(3px);
+      }
+      .depth-card-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .depth-card-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .depth-card-name {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .depth-card-hint {
+        font-size: 10px;
+        color: var(--text-muted);
+        line-height: 1.3;
+        margin-top: 1px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      .depth-card-arrow {
+        color: rgba(61, 153, 112, 0.55);
+        font-size: 14px;
+        flex-shrink: 0;
+      }
+
+      /* インライン自由入力ノード */
+      .depth-branch-free {
+        position: relative;
+        margin-top: 4px;
+      }
+      .depth-branch-free::before {
+        content: "";
+        position: absolute;
+        left: -20px;
+        top: 50%;
+        width: 14px;
+        height: 1.5px;
+        background: rgba(139, 90, 43, 0.25);
+      }
+      .depth-branch-free::after {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(139, 90, 43, 0.25);
+        border: 2px solid white;
+      }
+      .depth-free-row {
+        display: flex;
+        gap: 6px;
+      }
+      .depth-free-input {
+        flex: 1;
+        background: var(--bg);
+        border: 1.5px dashed rgba(61, 153, 112, 0.35);
+        border-radius: var(--radius-sm);
+        padding: 9px 12px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .depth-free-input:focus {
+        border-color: var(--accent);
+        border-style: solid;
+        background: rgba(61, 153, 112, 0.04);
+      }
+      .depth-free-input::placeholder {
+        color: var(--text-muted);
+        font-size: 12px;
+      }
+      .depth-free-btn {
+        background: rgba(61, 153, 112, 0.1);
+        border: 1.5px solid rgba(61, 153, 112, 0.28);
+        border-radius: var(--radius-sm);
+        color: var(--accent);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 0 14px;
+        cursor: pointer;
+        min-height: 42px;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .depth-free-btn:active {
+        background: rgba(61, 153, 112, 0.2);
+      }
+
+      /* グループヘッダー */
+      .map-group-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      .map-group-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .map-group--width .map-group-icon {
+        background: rgba(61, 153, 112, 0.12);
+      }
+      .map-group--depth .map-group-icon {
+        background: rgba(61, 153, 112, 0.12);
+      }
+      .map-group-icon svg {
+        width: 16px;
+        height: 16px;
+      }
+      .map-group--width .map-group-icon svg {
+        stroke: var(--accent);
+      }
+      .map-group--depth .map-group-icon svg {
+        stroke: var(--accent);
+      }
+
+      .map-group-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .map-group-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .map-group--depth .map-group-title {
+        color: var(--accent);
+      }
+      .map-group-sub {
+        font-size: 10px;
+        color: var(--text-muted);
+        margin-top: 2px;
+      }
+      .map-group-count {
+        font-size: 11px;
+        color: var(--text-muted);
+        flex-shrink: 0;
+      }
+
+      /* カードリスト */
+      .map-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      /* カード共通 */
+      .map-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .map-card:active {
+        background: var(--surface2);
+        transform: translateX(3px);
+      }
+      .map-group--width .map-card:active {
+        border-color: var(--accent);
+      }
+      .map-group--depth .map-card:active {
+        border-color: var(--accent);
+      }
+
+      .map-card.is-current {
+        border-color: var(--accent);
+        background: linear-gradient(
+          135deg,
+          rgba(126, 200, 200, 0.08) 0%,
+          rgba(144, 212, 160, 0.08) 100%
+        );
+        cursor: default;
+      }
+      .map-card.is-current:active {
+        transform: none;
+      }
+
+      .map-card-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+      .map-group--depth .map-card-icon {
+        font-size: 18px;
+      }
+
+      .map-card-content {
+        flex: 1;
+        min-width: 0;
+      }
+      .map-card-badge {
+        display: none;
+        font-size: 9px;
+        font-weight: 600;
+        color: var(--accent);
+        letter-spacing: 0.3px;
+        margin-bottom: 1px;
+      }
+      .map-card.is-current .map-card-badge {
+        display: block;
+      }
+      .map-card-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1.3;
+      }
+      .map-card.is-current .map-card-name {
+        color: var(--accent);
+      }
+      .map-group--depth .map-card-name {
+        font-size: 12px;
+      }
+      .map-card-hint {
+        font-size: 10px;
+        color: var(--text-muted);
+        line-height: 1.3;
+        margin-top: 1px;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+
+      .map-card-arrow {
+        color: var(--text-muted);
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+      .map-card.is-current .map-card-arrow {
+        display: none;
+      }
+
+      /* ── 深掘りボタン & モーダル ── */
+      .btn-drill-wrap {
+        margin-bottom: 28px;
+      }
+      .btn-drill {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        background: linear-gradient(
+          135deg,
+          rgba(126, 200, 200, 0.15) 0%,
+          rgba(144, 212, 160, 0.15) 100%
+        );
+        border: 1.5px solid var(--pill-border);
+        border-radius: var(--radius);
+        padding: 18px 20px;
+        cursor: pointer;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--accent);
+        transition: all 0.15s;
+        box-shadow: 0 2px 8px rgba(61, 153, 112, 0.08);
+        user-select: none;
+      }
+      .btn-drill:active {
+        background: linear-gradient(
+          135deg,
+          rgba(126, 200, 200, 0.25) 0%,
+          rgba(144, 212, 160, 0.25) 100%
+        );
+        transform: scale(0.99);
+      }
+      .btn-drill svg {
+        flex-shrink: 0;
+      }
+
+      /* モーダル */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 51, 40, 0.45);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 500;
+        display: flex;
+        align-items: flex-end;
+        animation: fadeIn 0.2s ease both;
+      }
+      .modal-overlay.hidden {
+        display: none !important;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-sheet {
+        width: 100%;
+        background: var(--surface);
+        border-radius: 24px 24px 0 0;
+        padding: 0 0 calc(24px + var(--safe-bottom)) 0;
+        animation: slideUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        max-height: 88vh;
+        overflow-y: auto;
+      }
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+
+      .modal-handle {
+        width: 40px;
+        height: 4px;
+        background: var(--border);
+        border-radius: 2px;
+        margin: 12px auto 0;
+      }
+      .modal-header {
+        padding: 16px 20px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .modal-title {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 0.8px;
+        margin-bottom: 3px;
+      }
+      .modal-topic {
+        font-family: "Outfit", sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--text);
+        line-height: 1.2;
+      }
+      .modal-topic span {
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .modal-body {
+        padding: 16px 20px;
+      }
+
+      .modal-candidates {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .modal-candidate {
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .modal-candidate:active {
+        background: var(--pill-bg);
+        border-color: var(--accent);
+        transform: scale(0.99);
+      }
+      .modal-candidate-num {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        flex-shrink: 0;
+      }
+      .modal-candidate-text {
+        flex: 1;
+        min-width: 0;
+      }
+      .modal-candidate-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 2px;
+      }
+      .modal-candidate-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .modal-candidate-arrow {
+        color: var(--text-muted);
+        font-size: 16px;
+      }
+
+      .modal-free-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+      }
+      .modal-free-row {
+        display: flex;
+        gap: 8px;
+      }
+      .modal-free-input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .modal-free-input:focus {
+        border-color: var(--accent);
+      }
+      .modal-free-input::placeholder {
+        color: var(--text-muted);
+      }
+      .modal-free-btn {
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        border-radius: var(--radius-sm);
+        color: var(--accent);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 0 16px;
+        cursor: pointer;
+        min-height: 48px;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .modal-free-btn:active {
+        background: rgba(61, 153, 112, 0.2);
+      }
+
+      .depth-max {
+        background: linear-gradient(
+          135deg,
+          rgba(126, 200, 200, 0.08) 0%,
+          rgba(144, 212, 160, 0.08) 100%
+        );
+        border: 1px solid rgba(61, 153, 112, 0.15);
+        border-radius: var(--radius);
+        padding: 28px 20px;
+        text-align: center;
+      }
+      .depth-max-icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+      }
+      .depth-max-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--accent);
+      }
+      .depth-max-sub {
+        font-size: 13px;
+        color: var(--text-muted);
+        line-height: 1.6;
+      }
+      .btn-back-theme {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 18px;
+        background: var(--surface);
+        border: 1px solid var(--pill-border);
+        border-radius: 24px;
+        color: var(--accent);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        padding: 12px 22px;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      }
+      .btn-back-theme:active {
+        background: var(--pill-bg);
+      }
+
+      /* ════ LOADING ════ */
+      #screen-loading {
+        padding-top: 100px;
+        text-align: center;
+        animation: fadeUp 0.25s ease both;
+      }
+      .loading-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+      .loading-leaf {
+        width: 48px;
+        height: 48px;
+        animation: grow 1.2s ease-in-out infinite;
+      }
+      .loading-leaf svg {
+        width: 100%;
+        height: 100%;
+      }
+      .loading-text {
+        font-size: 13px;
+        color: var(--text-muted);
+        font-weight: 500;
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes grow {
+        0%,
+        100% {
+          transform: scale(1) rotate(0deg);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.15) rotate(5deg);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header id="app-header">
+      <button class="btn-back" id="btn-back" onclick="goBack()">‹</button>
+      <div class="logo" onclick="goHome()">Minori</div>
+      <div class="header-center" id="header-center"></div>
+      <button class="btn-home" onclick="goHome()">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+      </button>
+    </header>
+
+    <main>
+      <!-- START -->
+      <div id="screen-start">
+        <div class="start-logo-area">
+          <img
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Gemini_Generated_Image_w83pptw83pptw83p-PXgSRzX8u7YzJtOvmyRr2tjg7sZ69C.png"
+            alt="Minori"
+            class="start-logo-img"
+          />
+        </div>
+        <p class="start-eyebrow">Knowledge Explorer</p>
+        <h1 class="start-title">知識を<span>実らせ</span>よう</h1>
+        <p class="start-sub">
+          気になるテーマを選んで、<br />興味の赴くままに深掘りしていこう。
+        </p>
+        <p class="theme-label">テーマを入力</p>
+        <div class="theme-input-wrapper">
+          <input
+            class="theme-input"
+            id="theme-input"
+            placeholder="例：日本の音楽史"
+            onkeydown="if (event.key === 'Enter') startTheme();"
+          />
+          <button class="btn-go" onclick="startTheme()">→</button>
+        </div>
+        <p class="example-label">おすすめテーマ</p>
+        <div class="example-themes">
+          <div class="example-chip" onclick="setTheme('日本の音楽史')">
+            🎵 日本の音楽史
+          </div>
+          <div class="example-chip" onclick="setTheme('宇宙の構造')">
+            🌌 宇宙の構造
+          </div>
+          <div class="example-chip" onclick="setTheme('江戸時代の文化')">
+            ⛩️ 江戸時代の文化
+          </div>
+          <div class="example-chip" onclick="setTheme('コーヒーの世界')">
+            ☕ コーヒーの世界
+          </div>
+        </div>
+      </div>
+
+      <!-- TOPICS -->
+      <div id="screen-topics" class="hidden">
+        <p class="screen-heading">テーマ</p>
+        <h2 class="screen-theme-name" id="topics-theme-name"></h2>
+        <p class="screen-sub" id="topics-sub"></p>
+        <div class="topic-cards" id="topic-cards"></div>
+        <div class="free-input-section">
+          <p class="free-input-label">自分で入力する</p>
+          <div class="free-input-row">
+            <input
+              class="free-input"
+              id="free-topic-input"
+              placeholder="気になるトピックを入力..."
+            />
+            <button class="btn-free" onclick="goFreeTopic()">探索 →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- DETAIL -->
+      <div id="screen-detail" class="hidden">
+        <nav class="breadcrumb" id="breadcrumb"></nav>
+        <p class="detail-label" id="detail-label"></p>
+        <h2 class="detail-title" id="detail-title"></h2>
+        <div class="tag-row" id="detail-tags"></div>
+        <div class="detail-content" id="detail-content"></div>
+        <div class="related-section" id="related-section"></div>
+        <div id="next-section">
+          <div class="btn-drill-wrap" id="btn-drill-wrap">
+            <button class="btn-drill" onclick="openDrillModal()">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path
+                  d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+                ></path>
+                <path
+                  d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
+                ></path>
+              </svg>
+              さらに深掘りする
+            </button>
+          </div>
+          <div id="next-cards"></div>
+        </div>
+      </div>
+
+      <!-- 深掘りモーダル -->
+      <div
+        class="modal-overlay hidden"
+        id="drill-modal"
+        onclick="closeDrillModalIfOutside(event)"
+      >
+        <div class="modal-sheet">
+          <div class="modal-handle"></div>
+          <div class="modal-header">
+            <div class="modal-title">次に探索するトピックを選ぼう</div>
+            <div class="modal-topic" id="modal-current-topic"></div>
+          </div>
+          <div class="modal-body">
+            <div class="modal-candidates" id="modal-candidates"></div>
+            <div class="modal-free-label">自分でトピックを入力する</div>
+            <div class="modal-free-row">
+              <input
+                class="modal-free-input"
+                id="modal-free-input"
+                placeholder="トピックを入力..."
+              />
+              <button class="modal-free-btn" onclick="submitModalFree()">
+                探索 →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div id="screen-loading" class="hidden">
+        <div class="loading-container">
+          <div class="loading-leaf">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#3d9970"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+              ></path>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+            </svg>
+          </div>
+          <p class="loading-text">探索中...</p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const DB = {
+        日本の音楽史: {
+          sub: "明治から現代まで、多様な音楽の系譜を辿ろう",
+          topics: [
+            {
+              id: "happyend",
+              icon: "🎸",
+              name: "はっぴいえんど",
+              desc: "日本語ロックの礎を作ったバンド",
+              tags: [
+                { label: "1969–1972", type: "era" },
+                { label: "フォークロック", type: "genre" },
+                { label: "日本語ロック", type: "key" },
+              ],
+              content: `<p><strong>はっぴいえんど</strong>は1969年に結成された日本のロックバンドで、大滝詠一、松本隆、細野晴臣、鈴木茂の4人で構成されていた。彼らの最大の功績は、英語が主流だったロックの世界に<strong>日本語の美しさ</strong>を持ち込んだことだ。</p><div class="highlight">「風をあつめて」「春よ来い」など、詩的な日本語の歌詞と洋楽的サウンドの融合は、後の日本のポップミュージック全体に多大な影響を与えた。</div><p>バンド解散後も各メンバーが第一線で活躍し続けた点でも異例の存在。松本隆は日本屈指の作詞家に、細野晴臣はYMOへ、大滝詠一はシティポップの礎を作り上げた。</p>`,
+              next: [
+                {
+                  id: "matsumoto",
+                  icon: "✍️",
+                  name: "松本隆の作詞世界",
+                  hint: "「木綿のハンカチーフ」へ続く詩の旅",
+                },
+                {
+                  id: "hosono",
+                  icon: "🎹",
+                  name: "細野晴臣とYMO",
+                  hint: "テクノポップへの進化",
+                },
+                {
+                  id: "ohtaki",
+                  icon: "🌆",
+                  name: "大滝詠一とA LONG VACATION",
+                  hint: "シティポップの誕生",
+                },
+                {
+                  id: "jprock_roots",
+                  icon: "🔊",
+                  name: "日本語ロック論争",
+                  hint: "英語か日本語か、時代の分岐点",
+                },
+              ],
+            },
+            {
+              id: "koto",
+              icon: "🎎",
+              name: "琴と邦楽",
+              desc: "1000年以上の歴史を持つ和楽器の世界",
+              tags: [
+                { label: "平安〜現代", type: "era" },
+                { label: "雅楽・箏曲", type: "genre" },
+                { label: "伝統音楽", type: "key" },
+              ],
+              content: `<p><strong>琴（こと）</strong>は日本を代表する弦楽器で、奈良時代に中国から伝わった<strong>箏（そう）</strong>がその原型とされる。現在一般に「琴」と呼ばれるのは、実際には13本の弦を持つ「十三絃箏」だ。</p><div class="highlight">江戸時代の盲目の音楽家・八橋検校が箏曲を大成し、「六段の調」などの名曲を残した。これが現代の箏曲の基礎となっている。</div><p>近代以降は<strong>宮城道雄</strong>が西洋音楽の要素を取り入れ、「春の海」などの傑作を生み出した。現代では沢井忠夫・一恵夫妻らが現代箏曲の可能性を広げている。</p>`,
+              next: [
+                {
+                  id: "gagaku",
+                  icon: "🏯",
+                  name: "雅楽と宮廷音楽",
+                  hint: "平安朝に花開いた音の世界",
+                },
+                {
+                  id: "shakuhachi",
+                  icon: "🎋",
+                  name: "尺八の精神性",
+                  hint: "禅と音楽の交差点",
+                },
+                {
+                  id: "miyagi",
+                  icon: "🌊",
+                  name: "宮城道雄と近代邦楽",
+                  hint: "洋楽との融合を試みた革新者",
+                },
+                {
+                  id: "wagakki_modern",
+                  icon: "⚡",
+                  name: "和楽器バンドと現代融合",
+                  hint: "ロックと伝統の衝撃的出会い",
+                },
+              ],
+            },
+            {
+              id: "anime_music",
+              icon: "🎌",
+              name: "アニメのタイアップ",
+              desc: "音楽とアニメが共に成長した30年の歴史",
+              tags: [
+                { label: "1990年代〜", type: "era" },
+                { label: "J-POP / アニソン", type: "genre" },
+                { label: "タイアップ戦略", type: "key" },
+              ],
+              content: `<p>アニメと音楽のタイアップ戦略は1990年代に本格化した。<strong>フジテレビ系アニメ</strong>が積極的にJ-POPアーティストを起用したことで、アニメの主題歌がシングルチャートを席巻する時代が訪れた。</p><div class="highlight">「SLAM DUNK」「幽遊白書」「ドラゴンボールZ」...タイアップは両者に相乗効果をもたらした。</div><p>2000年代以降は「アニソン」が独立したジャンルとして確立。LiSA、Aimer、YOASOBIなどがアニメを入口に世界規模で認知されるアーティストとなり、<strong>グローバルな日本文化発信</strong>の重要な柱となった。</p>`,
+              next: [
+                {
+                  id: "90s_jpop",
+                  icon: "💿",
+                  name: "90年代J-POPとメディア",
+                  hint: "小室哲哉が作り上げたサウンドの時代",
+                },
+                {
+                  id: "anisong_genre",
+                  icon: "🎤",
+                  name: "アニソンジャンルの独立",
+                  hint: "LiSAからYOASOBIまで",
+                },
+                {
+                  id: "netflix_anime",
+                  icon: "🌍",
+                  name: "グローバル配信とアニメ音楽",
+                  hint: "Spotifyで世界に届く日本の音",
+                },
+                {
+                  id: "vocaloid",
+                  icon: "🤖",
+                  name: "ボカロ文化の台頭",
+                  hint: "初音ミクが変えた音楽制作",
+                },
+              ],
+            },
+          ],
+        },
+      };
+
+      const DEEP_DB = {
+        matsumoto: {
+          icon: "✍️",
+          name: "松本隆の作詞世界",
+          parentId: "happyend",
+          parentName: "はっぴいえんど",
+          tags: [
+            { label: "1970s〜2000s", type: "era" },
+            { label: "歌謡曲", type: "genre" },
+            { label: "言葉の職人", type: "key" },
+          ],
+          content: `<p><strong>松本隆</strong>は「風をあつめて」の詩的世界から出発し、1970〜80年代の歌謡曲において最高の作詞家として頭角を現した。太田裕美「木綿のハンカチーフ」、松田聖子「赤いスイートピー」など、情景が目に浮かぶような詞は他の追随を許さない。</p><div class="highlight">松本の詞の特徴は「具体的な名詞による情景描写」。抽象的な愛を語るのではなく、物や場所の固有名詞で感情を喚起させる手法は、後の作詞家たちに大きな影響を与えた。</div><p>2021年には<strong>「風街れじぇんど」</strong>として多くのアーティストとのコラボレーションが実現し、現代における存在感も衰えない。</p>`,
+          next: [
+            {
+              id: "seiko_80s",
+              icon: "🌸",
+              name: "松田聖子と80年代アイドル",
+              hint: "アイドル文化の頂点",
+            },
+            {
+              id: "kayokyoku",
+              icon: "🎙️",
+              name: "歌謡曲の黄金期",
+              hint: "昭和ポップスの豊かさ",
+            },
+            {
+              id: "kotoba_music",
+              icon: "📖",
+              name: "日本語と音楽の相性",
+              hint: "言語の特性と音楽表現",
+            },
+          ],
+        },
+        hosono: {
+          icon: "🎹",
+          name: "細野晴臣とYMO",
+          parentId: "happyend",
+          parentName: "はっぴいえんど",
+          tags: [
+            { label: "1978〜1983", type: "era" },
+            { label: "テクノポップ", type: "genre" },
+            { label: "電子音楽", type: "key" },
+          ],
+          content: `<p><strong>イエロー・マジック・オーケストラ（YMO）</strong>は1978年に細野晴臣、坂本龍一、高橋幸宏の3人で結成された。シンセサイザーとコンピュータを駆使したサウンドは世界中に衝撃を与え、テクノポップという新ジャンルを確立した。</p><div class="highlight">「テクノポリス」「ライディーン」は今なお世界中でサンプリングされ続けている。YMOの影響は音楽だけにとどまらず、ファッション・グラフィックデザイン・映像にまで及んだ。</div><p>細野晴臣は現在もアンビエント音楽の探求を続けており、数十年にわたって日本音楽の最前線に立ち続けている。</p>`,
+          next: [
+            {
+              id: "sakamoto",
+              icon: "🎼",
+              name: "坂本龍一のソロ活動",
+              hint: "映画音楽から環境音楽へ",
+            },
+            {
+              id: "techno_world",
+              icon: "🌐",
+              name: "世界のテクノとの関係",
+              hint: "Kraftwerkとの比較",
+            },
+            {
+              id: "synth_instruments",
+              icon: "🔌",
+              name: "シンセサイザーの歴史",
+              hint: "機械が生む新しい音",
+            },
+          ],
+        },
+        ohtaki: {
+          icon: "🌆",
+          name: "大滝詠一とA LONG VACATION",
+          parentId: "happyend",
+          parentName: "はっぴいえんど",
+          tags: [
+            { label: "1980年代", type: "era" },
+            { label: "シティポップ", type: "genre" },
+            { label: "スペクターサウンド", type: "key" },
+          ],
+          content: `<p>1981年にリリースされた<strong>「A LONG VACATION」</strong>は、フィル・スペクターの「ウォール・オブ・サウンド」を日本的に昇華させた傑作。透明感のある夏のサウンドは、以降のシティポップの原型を作った。</p><div class="highlight">2020年代になってYouTubeやSpotifyで世界中の若者が「再発見」し、Spotifyの世界チャートにランクインするという異例の現象を起こした。</div><p>大滝はナイアガラレーベルを主宰し、アーカイブへの強いこだわりを持っていた。日本のポップミュージックの歴史的な研究者・実践者でもあった。</p>`,
+          next: [
+            {
+              id: "citypop_world",
+              icon: "🌏",
+              name: "シティポップの世界的再評価",
+              hint: "なぜ今、海外で人気？",
+            },
+            {
+              id: "summer_sound",
+              icon: "☀️",
+              name: "夏と日本音楽の関係",
+              hint: "夏うた文化の系譜",
+            },
+            {
+              id: "niagara",
+              icon: "💿",
+              name: "ナイアガラレーベルと制作哲学",
+              hint: "こだわりのアーカイブ精神",
+            },
+          ],
+        },
+        jprock_roots: {
+          icon: "🔊",
+          name: "日本語ロック論争",
+          parentId: "happyend",
+          parentName: "はっぴいえんど",
+          tags: [
+            { label: "1960〜70年代", type: "era" },
+            { label: "ロック", type: "genre" },
+            { label: "言語論", type: "key" },
+          ],
+          content: `<p>1960年代後半、グループサウンズが英語詞でロックを演奏する中、「日本語はロックに向かない」という議論が起きた。日本語の音節構造（子音+母音）がビートに乗りにくいという主張だ。</p><div class="highlight">はっぴいえんどはそれを「否」と証明した。松本隆の詞は日本語の母音の柔らかさをリズムの一部として活用し、英語ロックとは異なる独自の表現を生み出した。</div><p>この論争は内田裕也vs細野晴臣の形で具体化し、日本のロック界に大きな影響を与えた。今では当たり前となった日本語ロックの礎を作ったのは、この議論だった。</p>`,
+          next: [
+            {
+              id: "gs_era",
+              icon: "🎸",
+              name: "グループサウンズの時代",
+              hint: "ベンチャーズがやってきた",
+            },
+            {
+              id: "punk_japan",
+              icon: "⚡",
+              name: "日本パンクの勃興",
+              hint: "THE STAR CLUBからブルーハーツへ",
+            },
+            {
+              id: "indie_90s",
+              icon: "🎵",
+              name: "90年代インディーズと言語",
+              hint: "フィッシュマンズ、くるりの実験",
+            },
+          ],
+        },
+        gagaku: {
+          icon: "🏯",
+          name: "雅楽と宮廷音楽",
+          parentId: "koto",
+          parentName: "琴と邦楽",
+          tags: [
+            { label: "奈良〜平安", type: "era" },
+            { label: "雅楽", type: "genre" },
+            { label: "宮廷文化", type: "key" },
+          ],
+          content: `<p><strong>雅楽</strong>は7〜8世紀に中国・朝鮮から伝来した音楽と、日本古来の音楽が融合して成立した宮廷音楽だ。笙・篳篥・龍笛などの管楽器、琵琶・箏などの弦楽器、太鼓などの打楽器で演奏される。</p><div class="highlight">世界最古の形をほぼ維持し続けるオーケストラ音楽として、ユネスコ無形文化遺産にも登録されている。1000年以上、皇室と結びついて伝承されてきた。</div><p>現代では宮内庁式部職楽部が正統な伝承を担い、武満徹などの現代作曲家も雅楽の要素を取り入れた作品を残している。</p>`,
+          next: [
+            {
+              id: "biwa",
+              icon: "🎵",
+              name: "琵琶と語り物",
+              hint: "平家物語と音楽の関係",
+            },
+            {
+              id: "noh_music",
+              icon: "🎭",
+              name: "能楽の音楽",
+              hint: "静寂の中に宿る美",
+            },
+            {
+              id: "takemitsu",
+              icon: "🌿",
+              name: "武満徹と現代音楽",
+              hint: "雅楽を西洋で響かせた作曲家",
+            },
+          ],
+        },
+        shakuhachi: {
+          icon: "🎋",
+          name: "尺八の精神性",
+          parentId: "koto",
+          parentName: "琴と邦楽",
+          tags: [
+            { label: "鎌倉〜江戸", type: "era" },
+            { label: "禅音楽", type: "genre" },
+            { label: "虚無僧", type: "key" },
+          ],
+          content: `<p><strong>尺八</strong>は竹製の縦笛で、奈良時代に中国から伝わった。しかし江戸時代に<strong>虚無僧（こむそう）</strong>が宗教的な吹禅として演奏することで独自の精神性を持つ楽器として発展した。</p><div class="highlight">「本曲」と呼ばれる尺八独奏曲は、西洋音楽の概念では測れない「間（ま）」と「音色の変化」が核心にある。一音一音に命を吹き込むような演奏スタイルは瞑想的体験に近い。</div><p>現代では海外でもジャズとのコラボレーションが生まれ、尺八の「ブレスノイズ」はエレクトロニカやアンビエントの世界でも注目されている。</p>`,
+          next: [
+            {
+              id: "ma_concept",
+              icon: "⬜",
+              name: "「間」の概念と日本芸術",
+              hint: "沈黙は語る",
+            },
+            {
+              id: "world_fusion",
+              icon: "🌐",
+              name: "和楽器と世界音楽の融合",
+              hint: "ジャズ・アンビエントとの出会い",
+            },
+          ],
+        },
+        miyagi: {
+          icon: "🌊",
+          name: "宮城道雄と近代邦楽",
+          parentId: "koto",
+          parentName: "琴と邦楽",
+          tags: [
+            { label: "明治〜昭和", type: "era" },
+            { label: "近代箏曲", type: "genre" },
+            { label: "西洋融合", type: "key" },
+          ],
+          content: `<p><strong>宮城道雄（1894–1956）</strong>は幼少期に失明しながらも箏と尺八の名手となり、近代邦楽の最大の革新者となった。「春の海」はNHKの正月番組で用いられ、日本人にとって最も馴染み深い邦楽曲の一つだ。</p><div class="highlight">宮城は17弦箏を発明し、箏のオーケストラ化を推進した。西洋音楽の和声法を邦楽に応用する「新日本音楽」運動を牽引した。</div><p>彼の作品は今も世界中で演奏され、箏を国際的な楽器として定着させた功績は計り知れない。</p>`,
+          next: [
+            {
+              id: "meiji_western",
+              icon: "🎻",
+              name: "明治の西洋音楽受容",
+              hint: "唱歌から始まった近代化",
+            },
+            {
+              id: "sawai",
+              icon: "🎼",
+              name: "沢井忠夫と現代箏曲",
+              hint: "より過激な実験へ",
+            },
+          ],
+        },
+        wagakki_modern: {
+          icon: "⚡",
+          name: "和楽器バンドと現代融合",
+          parentId: "koto",
+          parentName: "琴と邦楽",
+          tags: [
+            { label: "2010年代〜", type: "era" },
+            { label: "和ロック", type: "genre" },
+            { label: "ニコニコ発", type: "key" },
+          ],
+          content: `<p><strong>和楽器バンド</strong>は2013年結成、箏・尺八・津軽三味線・和太鼓をロックバンドに組み込むという前例のないスタイルで国内外に衝撃を与えた。ニコニコ動画のボカロカバー動画からスタートした異色の経歴を持つ。</p><div class="highlight">「千本桜」カバーは再生回数1億回超。伝統楽器がメタルと融合するサウンドは特に海外ファンを魅了し、ワールドツアーを成功させた。</div><p>YOSHIDA BROTHERS（三味線×現代）など多数に広がっており、<strong>伝統楽器の新市場</strong>が形成されつつある。</p>`,
+          next: [
+            {
+              id: "vocaloid",
+              icon: "🤖",
+              name: "ボカロ文化の台頭",
+              hint: "初音ミクが変えた音楽制作",
+            },
+            {
+              id: "nico_culture",
+              icon: "📺",
+              name: "ニコニコ動画と音楽文化",
+              hint: "UGCが生んだ新しいシーン",
+            },
+          ],
+        },
+        "90s_jpop": {
+          icon: "💿",
+          name: "90年代J-POPとメディア",
+          parentId: "anime_music",
+          parentName: "アニメのタイアップ",
+          tags: [
+            { label: "1990年代", type: "era" },
+            { label: "J-POP", type: "genre" },
+            { label: "小室哲哉", type: "key" },
+          ],
+          content: `<p>1990年代はJ-POPの黄金期。<strong>小室哲哉</strong>プロデュースによるTRF・globe・安室奈美恵らが次々とミリオンヒットを連発し、CDシングルの売上が社会現象となった。</p><div class="highlight">1998年のCDシングル販売枚数は年間2億枚超。この時代の曲はカラオケ文化とも相乗効果を生み、音楽が最も「消費」された時代だった。</div><p>フジテレビ月9ドラマとの音楽タイアップも全盛期で、ドラマが音楽の宣伝媒体として機能した。配信以前の時代のメディアミックスの完成形だった。</p>`,
+          next: [
+            {
+              id: "komuro_decline",
+              icon: "📉",
+              name: "CDバブルの崩壊",
+              hint: "何が音楽産業を変えたのか",
+            },
+            {
+              id: "karaoke_culture",
+              icon: "🎤",
+              name: "カラオケと音楽消費",
+              hint: "歌う文化が産業を変えた",
+            },
+            {
+              id: "spotify_japan",
+              icon: "🎧",
+              name: "ストリーミングと日本市場",
+              hint: "遅れた日本のデジタル移行",
+            },
+          ],
+        },
+        anisong_genre: {
+          icon: "🎤",
+          name: "アニソンジャンルの独立",
+          parentId: "anime_music",
+          parentName: "アニメのタイアップ",
+          tags: [
+            { label: "2000年代〜", type: "era" },
+            { label: "アニソン", type: "genre" },
+            { label: "LiSA / YOASOBI", type: "key" },
+          ],
+          content: `<p>かつてアニメ主題歌は一般J-POPアーティストが担当するのが主流だったが、2000年代以降<strong>アニソン専業アーティスト</strong>が台頭。水木一郎、堀江美都子から始まるレジェンドたちの系譜は、現代のLiSAやAimerへと続く。</p><div class="highlight">LiSAの「炎」（鬼滅の刃）はSpotifyで10億回再生を超え、アニソンが世界規模のヒット曲になれることを証明した。</div><p>アニソンの特徴はサビへの展開の速さ、感情を煽るメロディラインの強さ、そしてアニメ世界観との一体感。これらは世界市場での強さの理由ともなっている。</p>`,
+          next: [
+            {
+              id: "netflix_anime",
+              icon: "🌍",
+              name: "グローバル配信とアニメ音楽",
+              hint: "Spotifyで世界に届く日本の音",
+            },
+            {
+              id: "game_music",
+              icon: "🎮",
+              name: "ゲーム音楽とアニソンの関係",
+              hint: "植松伸夫からYOASOBIへ",
+            },
+          ],
+        },
+        netflix_anime: {
+          icon: "🌍",
+          name: "グローバル配信とアニメ音楽",
+          parentId: "anime_music",
+          parentName: "アニメのタイアップ",
+          tags: [
+            { label: "2010年代〜", type: "era" },
+            { label: "ストリーミング", type: "genre" },
+            { label: "グローバル", type: "key" },
+          ],
+          content: `<p>Netflixの世界展開とSpotifyの普及が、アニメ音楽のグローバル化を加速させた。特に<strong>「進撃の巨人」「鬼滅の刃」「呪術廻戦」</strong>などの大ヒット作品の主題歌は、アニメを見たことがない人々にも届くようになった。</p><div class="highlight">YOASOBIの「アイドル」は2023年にSpotifyのグローバルチャート1位を獲得し、日本語楽曲として史上初の快挙となった。</div><p>この現象はK-POPの世界戦略とは異なり、<strong>コンテンツに引っ張られた自然な流通</strong>という点で特徴的。アニメというコンテンツが音楽の「物語的文脈」を担保している。</p>`,
+          next: [
+            {
+              id: "kpop_vs_jpop",
+              icon: "🔄",
+              name: "K-POPとJ-POPの世界戦略の違い",
+              hint: "二つの異なるアプローチ",
+            },
+            {
+              id: "tiktok_music",
+              icon: "📱",
+              name: "TikTokと音楽発見",
+              hint: "アルゴリズムが変えた音楽消費",
+            },
+          ],
+        },
+        vocaloid: {
+          icon: "🤖",
+          name: "ボカロ文化の台頭",
+          parentId: "anime_music",
+          parentName: "アニメのタイアップ",
+          tags: [
+            { label: "2007年〜", type: "era" },
+            { label: "ボカロ", type: "genre" },
+            { label: "初音ミク", type: "key" },
+          ],
+          content: `<p><strong>初音ミク</strong>は2007年にヤマハの音声合成技術VOCALOIDを使用したキャラクター音楽ソフトとして登場した。「プロでなくても音楽が作れる」という革命を起こした。</p><div class="highlight">ニコニコ動画でのボカロ文化はgigaP、DECO*27、じん（自然の敵P）など多くのコンポーザーを育て、そこからYOASOBI、米津玄師などの現在のメインストリームアーティストが生まれた。</div><p>ボカロは音楽制作の民主化を象徴する文化であると同時に、日本独自の<strong>「キャラクターと音楽の融合」</strong>という新しいコンテンツ形態を作り出した。3Dライブ「マジカルミライ」には毎年数万人が集まる。</p>`,
+          next: [
+            {
+              id: "yonezu",
+              icon: "🦋",
+              name: "米津玄師のキャリア",
+              hint: "ハチからの変容",
+            },
+            {
+              id: "ai_music",
+              icon: "🧠",
+              name: "AI音楽生成の現在",
+              hint: "ボカロの次の段階",
+            },
+          ],
+        },
+        seiko_80s: {
+          icon: "🌸",
+          name: "松田聖子と80年代アイドル",
+          parentId: "matsumoto",
+          parentName: "松本隆の作詞世界",
+          tags: [
+            { label: "1980年代", type: "era" },
+            { label: "アイドル歌謡", type: "genre" },
+          ],
+          content: `<p><strong>松田聖子</strong>は1980年のデビューから現在に至るまで第一線を走り続ける伝説のアイドルだ。松本隆・大瀧詠一・細野晴臣ら当代一流のクリエイターが楽曲制作に携わった。</p><div class="highlight">「青い珊瑚礁」「赤いスイートピー」「天国のキッス」—そのすべてが時代を超えて愛される楽曲となった。松田聖子は「アイドル」という枠組みを音楽面で最高水準まで引き上げた存在だ。</div><p>松本隆の詞は聖子のイメージと完璧に合致し、「永遠の少女性」を音楽で表現することに成功した。以降のアイドルシステムの原型を作った存在でもある。</p>`,
+          next: [
+            {
+              id: "akb_system",
+              icon: "🎀",
+              name: "AKB48とアイドルシステムの進化",
+              hint: "手の届くアイドルへ",
+            },
+          ],
+        },
+        kayokyoku: {
+          icon: "🎙️",
+          name: "歌謡曲の黄金期",
+          parentId: "matsumoto",
+          parentName: "松本隆の作詞世界",
+          tags: [
+            { label: "昭和30〜50年代", type: "era" },
+            { label: "歌謡曲", type: "genre" },
+          ],
+          content: `<p><strong>歌謡曲</strong>は1950〜80年代の日本のポップミュージックの総称。美空ひばりから山口百恵、沢田研二まで、多様なスターが活躍した。テレビの普及とともに「歌謡番組」が一大メディアとなった。</p><div class="highlight">「ザ・ベストテン」（TBS）は最高視聴率40%超を記録。歌謡曲の全盛期はテレビと音楽産業の蜜月関係の産物だった。</div><p>この時代の楽曲は演歌との境界が曖昧で、西洋のポップス・ロックの影響を受けながらも日本的な情感を保持していた。現代では「シティポップ」と並んで海外での再評価が進んでいる。</p>`,
+          next: [
+            {
+              id: "enka_roots",
+              icon: "🎻",
+              name: "演歌のルーツと構造",
+              hint: "日本の心を探る",
+            },
+            {
+              id: "misora",
+              icon: "⭐",
+              name: "美空ひばりという頂点",
+              hint: "昭和最大のスター",
+            },
+          ],
+        },
+        sakamoto: {
+          icon: "🎼",
+          name: "坂本龍一のソロ活動",
+          parentId: "hosono",
+          parentName: "細野晴臣とYMO",
+          tags: [
+            { label: "1980年代〜2020年代", type: "era" },
+            { label: "映画音楽・現代音楽", type: "genre" },
+          ],
+          content: `<p><strong>坂本龍一</strong>はYMO解散後、映画音��・クラシック・エレクトロニカと幅広い分野で活動した。「Merry Christmas Mr. Lawrence」「The Last Emperor」などの映画音楽は国際的に高く評価されアカデミー賞を受賞した。</p><div class="highlight">晩年は末期癌と闘いながら制作した最後のアルバム「12」は、一音一音が生と死の狭間から生まれたような静謐な傑作として世界中で絶賛された。</div><p>坂本は音楽家であるとともに環境活動家・反核運動家でもあり、「芸術家の社会的責任」を体現した存在だった。2023年に逝去するまで創作を続けた。</p>`,
+          next: [
+            {
+              id: "film_music_japan",
+              icon: "🎬",
+              name: "日本映画音楽の系譜",
+              hint: "久石譲から菅野よう子まで",
+            },
+            {
+              id: "ambient_music",
+              icon: "🌫️",
+              name: "アンビエント音楽の世界",
+              hint: "環境音楽という思想",
+            },
+          ],
+        },
+        citypop_world: {
+          icon: "🌏",
+          name: "シティポップの世界的再評価",
+          parentId: "ohtaki",
+          parentName: "大滝詠一とA LONG VACATION",
+          tags: [
+            { label: "2018年〜", type: "era" },
+            { label: "シティポップ", type: "genre" },
+          ],
+          content: `<p>2010年代末から始まった<strong>シティポップの世界的再評価</strong>は音楽史上稀有な現象だ。山下達郎「Ride on Time」、竹内まりや「Plastic Love」、松原みき「真夜中のドア」などが世界中で再発見された。</p><div class="highlight">YouTubeのアルゴリ���ムとLoFi Hip Hopムーブメントとの親和性が鍵。透明感のあるサウンド・メロウなグルーヴ・夏の夜の情景は、世界中のリスナーの郷愁を刺激した。</div><p>この現象はレコードの再発行、世界各地でのコンピレーション盤リリース、海外DJによるリミックスへと発展した。</p>`,
+          next: [
+            {
+              id: "lofi_hiphop",
+              icon: "🎧",
+              name: "LoFi Hip Hopという現象",
+              hint: "YouTubeが作った新ジャンル",
+            },
+            {
+              id: "nostalgia_music",
+              icon: "⏳",
+              name: "懐古主義と音楽消費",
+              hint: "なぜ人は過去の音楽を求めるのか",
+            },
+          ],
+        },
+        komuro_decline: {
+          icon: "📉",
+          name: "CDバブルの崩壊",
+          parentId: "90s_jpop",
+          parentName: "90年代J-POPとメディア",
+          tags: [
+            { label: "2000年代〜", type: "era" },
+            { label: "音楽産業", type: "genre" },
+          ],
+          content: `<p>1998年をピークにCDの売上は急速に減少し始めた。背景にはナップスターに代表される<strong>MP3の違法共有</strong>、そして着うた・iTunesへのシフトがある。</p><div class="highlight">日本のCD売上は1998年の6000億円超から2018年には2500億円以下へと約60%も減少した。しかし同期間に世界各国がストリーミングへ移行する中、日本はCDへの依存を長期間維持し続けた。</div><p>CDバブルの崩壊はレコード会社・音楽出版社・アーティストの関係性を根本的に変えた。サブスクリプション時代には「アルバム」よりも「プレイリスト」が音楽消費の単位となっている。</p>`,
+          next: [
+            {
+              id: "spotify_japan",
+              icon: "🎧",
+              name: "ストリーミングと日本市場",
+              hint: "遅れた日本のデジタル移行",
+            },
+            {
+              id: "live_economy",
+              icon: "🎪",
+              name: "ライブエコノミーの台頭",
+              hint: "音楽収益モデルの転換",
+            },
+          ],
+        },
+        kpop_vs_jpop: {
+          icon: "🔄",
+          name: "K-POPとJ-POPの世界戦略の違い",
+          parentId: "netflix_anime",
+          parentName: "グローバル配信とアニメ音楽",
+          tags: [
+            { label: "2010年代〜", type: "era" },
+            { label: "グローバル戦略", type: "genre" },
+          ],
+          content: `<p><strong>K-POP</strong>は国家的な文化輸出戦略、英語圏向けプロモーション、厳格なトレーニングシステム、そしてビジュアルアイデンティティの統一によって世界市場を攻略した。</p><div class="highlight">対してJ-POPは意図的な世界戦略なしに「コンテンツ（アニメ・マンガ）の付随物として」世界へ広まった。YOASOBI「アイドル」は日本語のままグローバルチャート1位を取った。アプローチの違いが際立つ。</div><p>J-POPの自然な流通は<strong>文化的文脈と不可分</strong>であるという強みを持つ。コンテンツと音楽が一体化した戦略の可能性を示している。</p>`,
+          next: [
+            {
+              id: "japan_soft_power",
+              icon: "🗾",
+              name: "日本のソフトパワー戦略",
+              hint: "クールジャパンの評価と課題",
+            },
+          ],
+        },
+        yonezu: {
+          icon: "🦋",
+          name: "米津玄師のキャリア",
+          parentId: "vocaloid",
+          parentName: "ボカロ文化の台頭",
+          tags: [
+            { label: "2010年代〜", type: "era" },
+            { label: "J-POP / ロック", type: "genre" },
+          ],
+          content: `<p><strong>米津玄師</strong>はニコニコ動画でハチ（Hachi）名義でボカロPとして活動後、2012年から本名でシンガーソングライターとしてデビューした。「Lemon」は累計2億ストリーミングを超え、日本音楽史上最多を記録した。</p><div class="highlight">ボカロシーンで培った独自の音楽理論と作詞センスが、メインストリームでも発揮された。「アイネクライネ」「感電」「PaleBlue」—どれも文学的な詞と緻密なサウンドデザインが融合している。</div><p>米津の成功はボカロ出身アーティストが���流になる道を開き、YOASOBI・ずっと真夜中でいいのに。・ヨルシカなど「ボカロ世代」アーティストがJ-POPの中心となる流れを加速させた。</p>`,
+          next: [
+            {
+              id: "new_jpop_gen",
+              icon: "🌟",
+              name: "新世代J-POPの特徴",
+              hint: "米津・YOASOBI・Official髭男dism",
+            },
+          ],
+        },
+        ai_music: {
+          icon: "🧠",
+          name: "AI音楽生成の現在",
+          parentId: "vocaloid",
+          parentName: "ボカロ文化の台頭",
+          tags: [
+            { label: "2020年代〜", type: "era" },
+            { label: "AI音楽", type: "genre" },
+          ],
+          content: `<p>Suno・Udio・Stable Audioなど<strong>AI音楽生成ツール</strong>の台頭は、ボカロが持っていた「誰でも音楽を作れる」という民主化を、さらに先まで推し進めている。テキストを入力するだけで楽曲が完成する。</p><div class="highlight">2024年にはAI生成楽曲をめぐる著作権論争が本格化。学習データとして使われた楽曲に対するアーティストへの報酬、AI楽曲の著作権帰属など、法整備が追いついていない。</div><p>一方でAIはプロの制作ツールとしても浸透しつつある。作曲補助・マスタリング・ボーカルクローニングなど、AIが創作プロセスに組み込まれることで「人間らしさ」の定義が問われている。</p>`,
+          next: [
+            {
+              id: "copyright_music",
+              icon: "⚖️",
+              name: "音楽著作権の現在と未来",
+              hint: "AIが揺さぶる権利の構造",
+            },
+          ],
+        },
+        akb_system: {
+          icon: "🎀",
+          name: "AKB48とアイドルシステムの進化",
+          parentId: "seiko_80s",
+          parentName: "松田聖子と80年代アイドル",
+          tags: [
+            { label: "2005年〜", type: "era" },
+            { label: "アイドル", type: "genre" },
+          ],
+          content: `<p><strong>AKB48</strong>は2005年に秋元康がプロデュースした「会いに行けるアイドル」。劇場を拠点とするビジネスモデルと握手会・総選挙などの「参加型コンテンツ」がCDバブル後の音楽産業に新たな収益モデルをもたらした。</p><div class="highlight">CDシングルの売上は「握手券」の付与によって維持され、ストリーミング時代に逆行するようなモデルで複数枚購入が常態化した。音楽そのものよりもコミュニティへの帰属感が商品となった。</div><p>AKBモデルはHKT48・NMB48など多数の姉妹グループへ展開、さらに韓国PRODUCE 101の影響源にもなった。アイドルを「文化産業」として体系化した革命的なモデルだった。</p>`,
+          next: [
+            {
+              id: "idol_overseas",
+              icon: "🌸",
+              name: "日本アイドル文化の海外展開",
+              hint: "K-POPとの比較",
+            },
+          ],
+        },
+        film_music_japan: {
+          icon: "🎬",
+          name: "日本映画音楽の系譜",
+          parentId: "sakamoto",
+          parentName: "坂本龍一のソロ活動",
+          tags: [
+            { label: "1950年代〜", type: "era" },
+            { label: "映画音楽", type: "genre" },
+          ],
+          content: `<p>日本映画音楽の歴史は黒澤明作品を彩った<strong>早坂文雄</strong>から始まる。その後、伊福部昭（ゴジラ）、武満徹（砂の女）、坂本龍一（戦場のメリークリスマス）と革新が続いた。</p><div class="highlight">現代では<strong>久石譲</strong>が宮崎駿・北野武作品で国際的な評価を確立。菅野よう子はアニメ（攻殻機動隊・カウボーイビバップ）と映画の境界を超えて活躍する。</div><p>日本映画音楽の特徴は「間（ま）の活用」と「���旋律の明確さ」にある。感情を��楽で説明するのではなく、映像の余白を音で満たすアプローチが多い。</p>`,
+          next: [
+            {
+              id: "joe_hisaishi",
+              icon: "🎠",
+              name: "久石譲とジブリ音楽",
+              hint: "スタジオジブリの音の世界",
+            },
+          ],
+        },
+        lofi_hiphop: {
+          icon: "🎧",
+          name: "LoFi Hip Hopという現象",
+          parentId: "citypop_world",
+          parentName: "シティポップの世界的再評価",
+          tags: [
+            { label: "2010年代〜", type: "era" },
+            { label: "LoFi / チル", type: "genre" },
+          ],
+          content: `<p><strong>LoFi Hip Hop</strong>はYouTubeの「24時間ライブストリーム」形式で広まったジャンルで、アニメ風の女の子がイラストで登場するストリームが象徴的。勉強・作業BGMとしての需要から爆発的に普及した。</p><div class="highlight">シティポップとLoFiの親和性は非常に高い。どちらもメロウなコード進行、グルーヴィーなリズム、懐かしさを喚起するサウンドを共有している。シティポップのサンプリングがLoFiに多用された。</div><p>このジャンルはSpotify・Apple Musicのプレイリストに「集中」「勉強」「リラックス」として組み込まれ、音楽を「環境」として消費するトレンドを作り出した。</p>`,
+          next: [
+            {
+              id: "playlist_culture",
+              icon: "📋",
+              name: "プレイリスト文化と音楽消費",
+              hint: "アルバムの終焉？",
+            },
+          ],
+        },
+        spotify_japan: {
+          icon: "🎧",
+          name: "ストリーミングと日本市場",
+          parentId: "90s_jpop",
+          parentName: "90年代J-POPとメディア",
+          tags: [
+            { label: "2016年〜", type: "era" },
+            { label: "ストリーミング", type: "genre" },
+          ],
+          content: `<p>Spotifyは2016年に日本でサービスを開始したが、他の主要市場に比べて普及は遅かった。日本の音楽市場はCD販売とカラオケ、着うた時代からの<strong>コンテンツ産業の特殊な構造</strong>を持っていた。</p><div class="highlight">2022年頃からようやくストリーミングがCDを逆転。しかし日本の音楽ファンのCDへの愛着（音質・歌詞カード・特典）は他国に類を見ないほど強く、物理メディアは今も一定の市場を保つ。</div><p>ストリーミング化でアーティストの収益構造が変化。ライブ収入の重要性が増し、サブスクの海外からのロイヤルティがシティポップ再評価などを通じて増加している。</p>`,
+          next: [
+            {
+              id: "live_economy",
+              icon: "🎪",
+              name: "ライブエコノミーの台頭",
+              hint: "音楽収益モデルの転換",
+            },
+          ],
+        },
+      };
+
+      // ══════════════════════════════════════════════════════
+      // STATE & HELPERS
+      // ══════════════════════════════════════════════════════
+      let state = { theme: null, path: [] };
+
+      function findData(id) {
+        const themeData = DB[state.theme];
+        if (themeData) {
+          const found = themeData.topics.find((t) => t.id === id);
+          if (found) return found;
+        }
+        return DEEP_DB[id] || null;
+      }
+
+      function getSiblings(currentId, depth) {
+        if (depth === 1) {
+          const themeData = DB[state.theme];
+          if (!themeData) return [];
+          return themeData.topics.map((t) => ({
+            id: t.id,
+            icon: t.icon,
+            name: t.name,
+            hint: t.desc,
+          }));
+        }
+        const parentId = state.path[depth - 2]?.id;
+        if (!parentId) return [];
+        const parentData = findData(parentId);
+        if (!parentData?.next) return [];
+        return parentData.next.map((n) => ({
+          id: n.id,
+          icon: n.icon,
+          name: n.name,
+          hint: n.hint,
+        }));
+      }
+
+      // ══════════════════════════════════════════════════════
+      // HEADER
+      // ══════════════════════════════════════════════════════
+      function updateHeader() {
+        const header = document.getElementById("app-header");
+        const center = document.getElementById("header-center");
+        const inDetail = state.path.length > 0;
+        if (inDetail) {
+          header.classList.add("show-back");
+          const cur = state.path[state.path.length - 1];
+          center.innerHTML = `
+      <div class="header-theme">${state.theme || ""}</div>
+      <div class="header-topic">${cur?.name || ""}</div>
+    `;
+        } else {
+          header.classList.remove("show-back");
+          center.innerHTML = "";
+        }
+      }
+
+      // ══════════════════════════════════════════════════════
+      // SCREEN
+      // ══════════════════════════════════════════════════════
+      function showScreen(id) {
+        [
+          "screen-start",
+          "screen-topics",
+          "screen-detail",
+          "screen-loading",
+        ].forEach((s) => document.getElementById(s).classList.add("hidden"));
+        document.getElementById(id).classList.remove("hidden");
+      }
+
+      // ══════════════════════════════════════════════════════
+      // NAVIGATION
+      // ══════════════════════════════════════════════════════
+      function goHome() {
+        state = { theme: null, path: [] };
+        updateHeader();
+        showScreen("screen-start");
+      }
+
+      function goBack() {
+        if (state.path.length === 0) {
+          goHome();
+          return;
+        }
+        if (state.path.length === 1) {
+          state.path = [];
+          updateHeader();
+          renderTopicsScreen();
+          return;
+        }
+        state.path = state.path.slice(0, -1);
+        updateHeader();
+        renderDetailScreen(state.path[state.path.length - 1].id, false);
+      }
+
+      function setTheme(theme) {
+        document.getElementById("theme-input").value = theme;
+        document.getElementById("theme-input").focus();
+      }
+
+      function startTheme() {
+        const val = document.getElementById("theme-input").value.trim();
+        if (!val) return;
+        state.theme = val;
+        state.path = [];
+        updateHeader();
+        renderTopicsScreen();
+      }
+
+      function goToTopics() {
+        state.path = [];
+        updateHeader();
+        renderTopicsScreen();
+      }
+
+      function selectTopic(id, name) {
+        state.path = [{ id, name }];
+        updateHeader();
+        renderDetailWithLoading(id);
+      }
+
+      function selectSibling(id, name) {
+        state.path = [...state.path.slice(0, -1), { id, name }];
+        updateHeader();
+        renderDetailWithLoading(id);
+      }
+
+      function navigateToBreadcrumb(index) {
+        // パンくずの特定位置までstate.pathを切り詰めて、そのトピックを表示
+        state.path = state.path.slice(0, index + 1);
+        updateHeader();
+        renderDetailScreen(state.path[index].id, true);
+      }
+
+      function selectNext(id, name) {
+        closeDrillModal();
+        state.path = [...state.path, { id, name }];
+        updateHeader();
+        renderDetailWithLoading(id);
+      }
+
+      function openDrillModal() {
+        const candidates = window._drillCandidates || [];
+        const currentName = window._drillCurrentName || "";
+
+        // モーダルのタイトルにトピック名を表示
+        document.getElementById("modal-current-topic").innerHTML =
+          `「<span>${currentName}</span>」から派生するトピック`;
+
+        // 候補カードを生成（モックは候補1〜3、実データがあればそれを使用）
+        const mockCandidates =
+          candidates.length > 0
+            ? candidates.slice(0, 3)
+            : [
+                {
+                  id: "mock_1",
+                  icon: "🌱",
+                  name: "候補1",
+                  hint: "AIが提案するトピックがここに表示されます",
+                },
+                {
+                  id: "mock_2",
+                  icon: "🌿",
+                  name: "候補2",
+                  hint: "AIが提案するトピックがここに表示されます",
+                },
+                {
+                  id: "mock_3",
+                  icon: "🍃",
+                  name: "候補3",
+                  hint: "AIが提案するトピックがここに表示されます",
+                },
+              ];
+
+        document.getElementById("modal-candidates").innerHTML = mockCandidates
+          .map((c, i) => {
+            const safeName = c.name.replace(/"/g, "&quot;");
+            return `
+      <div class="modal-candidate"
+           data-id="${c.id}" data-name="${safeName}"
+           onclick="selectNext(this.dataset.id, this.dataset.name)">
+        <div class="modal-candidate-num">${i + 1}</div>
+        <div class="modal-candidate-text">
+          <div class="modal-candidate-name">${c.icon} ${c.name}</div>
+          <div class="modal-candidate-hint">${c.hint}</div>
+        </div>
+        <div class="modal-candidate-arrow">›</div>
+      </div>`;
+          })
+          .join("");
+
+        document.getElementById("modal-free-input").value = "";
+        document.getElementById("drill-modal").classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeDrillModal() {
+        document.getElementById("drill-modal").classList.add("hidden");
+        document.body.style.overflow = "";
+      }
+
+      function closeDrillModalIfOutside(e) {
+        if (e.target === document.getElementById("drill-modal"))
+          closeDrillModal();
+      }
+
+      function submitModalFree() {
+        const val = document.getElementById("modal-free-input").value.trim();
+        if (!val) return;
+        closeDrillModal();
+        state.path = [...state.path, { id: "free_" + Date.now(), name: val }];
+        updateHeader();
+        renderFreeDetail(val);
+      }
+
+      function submitDepthFree() {
+        const input = document.getElementById("depth-free-input");
+        if (!input) return;
+        const val = input.value.trim();
+        if (!val) return;
+        input.value = "";
+        state.path = [...state.path, { id: "free_" + Date.now(), name: val }];
+        updateHeader();
+        renderFreeDetail(val);
+      }
+
+      function goFreeTopic() {
+        const val = document.getElementById("free-topic-input").value.trim();
+        if (!val) return;
+        state.path.push({ id: "free_" + Date.now(), name: val });
+        updateHeader();
+        renderFreeDetail(val);
+      }
+
+      // ══════════════════════════════════════════════════════
+      // RENDER
+      // ══════════════════════════════════════════════════════
+      function renderTopicsScreen() {
+        const themeData = DB[state.theme];
+        document.getElementById("topics-theme-name").textContent = state.theme;
+        document.getElementById("topics-sub").textContent =
+          themeData?.sub || "どこから探索しますか？";
+        document.getElementById("topic-cards").innerHTML = themeData
+          ? themeData.topics
+              .map(
+                (t) => `
+        <div class="topic-card" data-id="${t.id}" data-name="${t.name.replace(/"/g, "&quot;")}" onclick="selectTopic(this.dataset.id, this.dataset.name)">
+          <div class="topic-icon">${t.icon}</div>
+          <div class="topic-info">
+            <div class="topic-name">${t.name}</div>
+            <div class="topic-desc">${t.desc}</div>
+          </div>
+          <div class="topic-arrow">›</div>
+        </div>`,
+              )
+              .join("")
+          : "";
+        document.getElementById("free-topic-input").value = "";
+        showScreen("screen-topics");
+        window.scrollTo(0, 0);
+      }
+
+      function renderDetailWithLoading(id) {
+        showScreen("screen-loading");
+        setTimeout(() => renderDetailScreen(id, true), 480);
+      }
+
+      function renderDetailScreen(id, scrollTop = true) {
+        const data = findData(id);
+        if (!data) {
+          renderFallback(id);
+          return;
+        }
+
+        const depth = state.path.length;
+        const maxDepth = 7;
+
+        // パンくずリストを生成
+        const breadcrumbEl = document.getElementById("breadcrumb");
+        let breadcrumbHTML = `
+    <div class="breadcrumb-item">
+      <span class="breadcrumb-link" onclick="goToTopics()">${state.theme}</span>
+    </div>`;
+        state.path.forEach((p, i) => {
+          const isLast = i === state.path.length - 1;
+          if (isLast) {
+            breadcrumbHTML += `<span class="breadcrumb-sep">›</span><span class="breadcrumb-current">${p.name}</span>`;
+          } else {
+            breadcrumbHTML += `
+        <span class="breadcrumb-sep">›</span>
+        <div class="breadcrumb-item">
+          <span class="breadcrumb-link" onclick="navigateToBreadcrumb(${i})">${p.name}</span>
+        </div>`;
+          }
+        });
+        breadcrumbEl.innerHTML = breadcrumbHTML;
+
+        document.getElementById("detail-label").textContent =
+          data.parentName || state.theme;
+        document.getElementById("detail-title").textContent = data.name;
+        document.getElementById("detail-tags").innerHTML = (data.tags || [])
+          .map((t) => `<span class="tag tag-${t.type}">${t.label}</span>`)
+          .join("");
+        document.getElementById("detail-content").innerHTML = data.content;
+
+        // ── トピックマップ（幅＝同階層、深さ＝派生）──
+        const siblings = getSiblings(id, depth);
+        const relatedEl = document.getElementById("related-section");
+        const hasChildren = data.next?.length > 0 && depth < maxDepth;
+        const hasSiblings = siblings.length > 1;
+
+        let mapHTML = "";
+
+        // 幅（同階層）グループ
+        if (hasSiblings) {
+          const currentIndex = siblings.findIndex((s) => s.id === id);
+          const nearbyTopics = [];
+          if (currentIndex > 0)
+            nearbyTopics.push({
+              ...siblings[currentIndex - 1],
+              position: "prev",
+            });
+          nearbyTopics.push({ ...siblings[currentIndex], position: "current" });
+          if (currentIndex < siblings.length - 1)
+            nearbyTopics.push({
+              ...siblings[currentIndex + 1],
+              position: "next",
+            });
+
+          const siblingBadges = siblings
+            .map((s) => {
+              const isCurrent = s.id === id;
+              const safeName = s.name.replace(/"/g, "&quot;");
+              return isCurrent
+                ? `<div class="topic-badge is-current">
+            <span class="topic-badge-dot"></span>
+            <span class="topic-badge-icon">${s.icon}</span>
+            <span class="topic-badge-name">${s.name}</span>
+          </div>`
+                : `<div class="topic-badge" data-id="${s.id}" data-name="${safeName}" onclick="selectSibling(this.dataset.id, this.dataset.name)">
+            <span class="topic-badge-icon">${s.icon}</span>
+            <span class="topic-badge-name">${s.name}</span>
+          </div>`;
+            })
+            .join("");
+
+          mapHTML += `
+      <div class="map-group map-group--width">
+        <div class="map-group-header">
+          <div class="map-group-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+            </svg>
+          </div>
+          <div class="map-group-text">
+            <div class="map-group-title">関連トピック</div>
+            <div class="map-group-sub">同じ階層の仲間たち</div>
+          </div>
+          <div class="map-group-count">${currentIndex + 1} / ${siblings.length}</div>
+        </div>
+        <div class="topic-badges">${siblingBadges}</div>
+      </div>`;
+        }
+
+        // 深さ（派生）グループ
+        if (hasChildren) {
+          const childCards = data.next
+            .map((n) => {
+              const safeName = n.name.replace(/"/g, "&quot;");
+              return `
+        <div class="depth-branch-item">
+          <div class="depth-card"
+               data-id="${n.id}" data-name="${safeName}"
+               onclick="selectNext(this.dataset.id, this.dataset.name)">
+            <div class="depth-card-icon">${n.icon}</div>
+            <div class="depth-card-content">
+              <div class="depth-card-name">${n.name}</div>
+              <div class="depth-card-hint">${n.hint}</div>
+            </div>
+            <div class="depth-card-arrow">›</div>
+          </div>
+        </div>`;
+            })
+            .join("");
+
+          mapHTML += `
+      <div class="map-group map-group--depth">
+        <div class="map-group-header">
+          <div class="map-group-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 3v12"></path>
+              <path d="M18 9a3 3 0 0 0-3-3H9"></path>
+              <path d="M6 21v-3a4 4 0 0 1 4-4h8"></path>
+            </svg>
+          </div>
+          <div class="map-group-text">
+            <div class="map-group-title">深掘りする</div>
+            <div class="map-group-sub">枝を伸ばして探索しよう</div>
+          </div>
+          <div class="map-group-count">${data.next.length}件</div>
+        </div>
+        <div class="depth-branch-tree">
+          <div class="depth-branch-trunk"></div>
+          ${childCards}
+          <div class="depth-branch-free">
+            <div class="depth-free-row">
+              <input class="depth-free-input" id="depth-free-input"
+                     placeholder="他のテーマを自由に探索…"
+                     onkeydown="if(event.key==='Enter')submitDepthFree()">
+              <button class="depth-free-btn" onclick="submitDepthFree()">探索 →</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+        }
+
+        relatedEl.innerHTML = mapHTML;
+
+        // ── 深掘りボタン非表示 / 終端メッセージ ──
+        const drillWrap = document.getElementById("btn-drill-wrap");
+        const nextEl = document.getElementById("next-cards");
+        drillWrap.style.display = "none"; // 深掘りは map-group--depth に統合
+        if (depth >= maxDepth || !data.next?.length) {
+          nextEl.innerHTML = `
+      <div class="depth-max">
+        <div class="depth-max-icon">🌿</div>
+        <div class="depth-max-title">探索の端まで来ました</div>
+        <div class="depth-max-sub">このトピックはここまで。<br>テーマに戻って別の方向を探索しよう。</div>
+        <button class="btn-back-theme" onclick="goToTopics()">← テーマに戻る</button>
+      </div>`;
+        } else {
+          nextEl.innerHTML = "";
+          // モーダル用データをグローバルに保持（モーダルは引き続き使用可能）
+          window._drillCandidates = data.next;
+          window._drillCurrentName = data.name;
+        }
+
+        showScreen("screen-detail");
+        if (scrollTop) window.scrollTo(0, 0);
+      }
+
+      function renderFallback(id) {
+        // パンくずリストを生成
+        const breadcrumbEl = document.getElementById("breadcrumb");
+        let breadcrumbHTML = `
+    <div class="breadcrumb-item">
+      <span class="breadcrumb-link" onclick="goToTopics()">${state.theme}</span>
+    </div>`;
+        const currentName = state.path[state.path.length - 1]?.name || id;
+        breadcrumbHTML += `
+    <span class="breadcrumb-sep">›</span>
+    <span class="breadcrumb-current">${currentName}</span>`;
+        breadcrumbEl.innerHTML = breadcrumbHTML;
+
+        document.getElementById("detail-label").textContent = `${state.theme}`;
+        document.getElementById("detail-title").textContent = currentName;
+        document.getElementById("detail-tags").innerHTML =
+          `<span class="tag tag-key">自由探索</span>`;
+        document.getElementById("detail-content").innerHTML = `
+    <p>このトピックはまだデータがありません。</p>
+    <div class="highlight">「日本の音楽史」テーマのトピックをお試しください。</div>`;
+        document.getElementById("related-section").innerHTML = "";
+        document.getElementById("btn-drill-wrap").style.display = "none";
+        document.getElementById("next-cards").innerHTML = `
+    <div class="depth-max">
+      <div class="depth-max-icon">🔍</div>
+      <div class="depth-max-title">データがありません</div>
+      <div class="depth-max-sub">別のトピックを試してみよう。</div>
+      <button class="btn-back-theme" onclick="goToTopics()">← テーマに戻る</button>
+    </div>`;
+        showScreen("screen-detail");
+      }
+
+      function renderFreeDetail(name) {
+        showScreen("screen-loading");
+        setTimeout(() => {
+          // パンくずリストを生成
+          const breadcrumbEl = document.getElementById("breadcrumb");
+          let breadcrumbHTML = `
+      <div class="breadcrumb-item">
+        <span class="breadcrumb-link" onclick="goToTopics()">${state.theme}</span>
+      </div>`;
+          breadcrumbHTML += `
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">${name}</span>`;
+          breadcrumbEl.innerHTML = breadcrumbHTML;
+
+          document.getElementById("detail-label").textContent =
+            `${state.theme}`;
+          document.getElementById("detail-title").textContent = name;
+          document.getElementById("detail-tags").innerHTML =
+            `<span class="tag tag-key">自由入力</span>`;
+          document.getElementById("detail-content").innerHTML = `
+      <p>「<strong>${name}</strong>」について探索しようとしています。</p>
+      <div class="highlight">AI実装後はここにリアルタイムの情報が表示されます。現在はデモモードで動作中です。</div>`;
+          document.getElementById("related-section").innerHTML = "";
+          document.getElementById("btn-drill-wrap").style.display = "none";
+          document.getElementById("next-cards").innerHTML = `
+      <div class="depth-max">
+        <div class="depth-max-icon">🌱</div>
+        <div class="depth-max-title">AIが応答を生成します</div>
+        <div class="depth-max-sub">本実装ではここに関連トピックが自動生成されます。</div>
+        <button class="btn-back-theme" onclick="goToTopics()">← テーマに戻る</button>
+      </div>`;
+          showScreen("screen-detail");
+        }, 600);
+      }
+
+      document
+        .getElementById("free-topic-input")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") goFreeTopic();
+        });
+      document
+        .getElementById("modal-free-input")
+        .addEventListener("keydown", (e) => {
+          if (e.key === "Enter") submitModalFree();
+        });
+    </script>
+  </body>
+</html>
