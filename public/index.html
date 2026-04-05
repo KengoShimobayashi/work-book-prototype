@@ -1542,7 +1542,92 @@
         cursor: not-allowed;
       }
 
-      /* ── 付加情報一覧モーダル ── */
+      /* ── 解析中ダイアログ ── */
+      .analyzing-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 51, 40, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease both;
+      }
+      .analyzing-overlay.hidden {
+        display: none !important;
+      }
+      .analyzing-dialog {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 32px 28px;
+        text-align: center;
+        max-width: 280px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(26, 51, 40, 0.3);
+        animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .analyzing-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--surface2);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .analyzing-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .analyzing-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+      .analyzing-progress {
+        margin-top: 16px;
+        height: 4px;
+        background: var(--surface2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .analyzing-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        width: 0%;
+        animation: progressAnim 2.5s ease-in-out forwards;
+      }
+      @keyframes progressAnim {
+        0% { width: 0%; }
+        30% { width: 40%; }
+        60% { width: 70%; }
+        80% { width: 85%; }
+        100% { width: 100%; }
+      }
+
+      /* ── 付加情報一覧画面 ── */
+      .info-list-page-header {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      #screen-info-list .info-list-body {
+        padding: 0;
+      }
+      #screen-info-list .info-list-empty {
+        padding: 60px 20px;
+      }
       .info-list-header {
         display: flex;
         align-items: center;
@@ -1878,6 +1963,17 @@
         </div>
       </div>
 
+      <!-- INFO LIST SCREEN (付加情報一覧画面) -->
+      <div id="screen-info-list" class="hidden">
+        <div class="info-list-page-header">
+          <p class="detail-label">付加情報一覧</p>
+          <h2 class="detail-title" id="info-list-topic-name"></h2>
+        </div>
+        <div class="info-list-body" id="info-list-body">
+          <!-- 動的に生成される -->
+        </div>
+      </div>
+
       <!-- 付加情報追加モーダル -->
       <div
         class="info-modal-overlay hidden"
@@ -1952,20 +2048,16 @@
         </div>
       </div>
 
-      <!-- 付加情報一覧モーダル -->
-      <div
-        class="info-modal-overlay hidden"
-        id="view-info-modal"
-        onclick="closeViewInfoModalIfOutside(event)"
-      >
-        <div class="info-modal-sheet">
-          <div class="modal-handle"></div>
-          <div class="info-list-header">
-            <div class="info-list-title">追加された付加情報</div>
-            <button class="info-list-close" onclick="closeViewInfoModal()">&times;</button>
+      <!-- 解析中ダイアログ -->
+      <div class="analyzing-overlay hidden" id="analyzing-overlay">
+        <div class="analyzing-dialog">
+          <div class="analyzing-spinner"></div>
+          <div class="analyzing-title">Gemini APIで解析中...</div>
+          <div class="analyzing-sub">
+            付加情報を解析して<br>解説内容を向上させています
           </div>
-          <div class="info-list-body" id="info-list-body">
-            <!-- 動的に生成される -->
+          <div class="analyzing-progress">
+            <div class="analyzing-progress-bar"></div>
           </div>
         </div>
       </div>
@@ -2660,7 +2752,7 @@
             { label: "2020年代〜", type: "era" },
             { label: "AI音楽", type: "genre" },
           ],
-          content: `<p>Suno・Udio・Stable Audioなど<strong>AI音楽生成ツール</strong>の台頭は、ボカロが持っていた「誰でも音楽を作れる」という民主化を、さらに先まで推し進めている。テキストを入力するだけで楽曲が完成する。</p><div class="highlight">2024年にはAI生成楽曲をめぐる著作権論争が本格化。学習データとして使われた楽曲に対するアーティストへの報酬、AI楽曲の著作権帰属など、法整備が追いついていない。</div><p>一方でAIはプロの制作ツールとしても浸透しつつある。作曲補助・マスタリング・ボーカルクローニングなど、AIが創作プロセスに組み込まれることで「人間らしさ」の定義が問われている。</p>`,
+          content: `<p>Suno・Udio・Stable Audioなど<strong>AI音楽生成ツール</strong>の台頭は、ボカロが持っていた「誰でも音楽を作れる」という民主化を、さらに先まで推し進めている。テキストを入力するだけで楽曲が完成する。</p><div class="highlight">2024年にはAI生成楽曲をめぐる著作権論争が本格化��学習データとして使われた楽曲に対するアーティストへの報酬、AI楽曲の著作権帰属など、法整備が追いついていない。</div><p>一方でAIはプロの制作ツールとしても浸透しつつある。作曲補助・マスタリング・ボーカルクローニングなど、AIが創作プロセスに組み込まれることで「人間らしさ」の定義が問われている。</p>`,
           next: [
             {
               id: "copyright_music",
@@ -2814,6 +2906,7 @@
           "screen-topics",
           "screen-detail",
           "screen-loading",
+          "screen-info-list",
         ].forEach((s) => document.getElementById(s).classList.add("hidden"));
         document.getElementById(id).classList.remove("hidden");
       }
@@ -2828,6 +2921,15 @@
       }
 
       function goBack() {
+        // 付加情報一覧画面からの戻り
+        if (!document.getElementById('screen-info-list').classList.contains('hidden')) {
+          if (infoListReturnTopicId) {
+            renderDetailScreen(infoListReturnTopicId, false);
+            infoListReturnTopicId = null;
+          }
+          return;
+        }
+        
         if (state.path.length === 0) {
           goHome();
           return;
@@ -3367,7 +3469,7 @@
         
         // ファイルタイプに応じたアイコン
         if (file.type === 'application/pdf') {
-          iconEl.textContent = '📄';
+          iconEl.textContent = '����';
         } else if (file.type.startsWith('image/')) {
           iconEl.textContent = '🖼️';
         } else {
@@ -3426,7 +3528,27 @@
 
         addSupplementaryInfo(topicId, info);
         closeAddInfoModal();
-        updateDetailContent(topicId);
+        showAnalyzingDialog(topicId);
+      }
+
+      // 解析中ダイアログを表示
+      function showAnalyzingDialog(topicId) {
+        const overlay = document.getElementById('analyzing-overlay');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // プログレスバーをリセット
+        const progressBar = overlay.querySelector('.analyzing-progress-bar');
+        progressBar.style.animation = 'none';
+        void progressBar.offsetWidth; // reflow
+        progressBar.style.animation = 'progressAnim 2.5s ease-in-out forwards';
+        
+        // 2.5秒後に解析完了として処理
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+          updateDetailContent(topicId);
+        }, 2500);
       }
 
       function updateDetailContent(topicId) {
@@ -3434,46 +3556,39 @@
         if (!data) return;
 
         const infoList = getSupplementaryInfo(topicId);
+        
+        // 付加情報がある場合は「解説が向上した」ことを示すインジケーターを表示
+        // 実際のGemini API実装では、ここでAIが生成した新しい解説が表示される
         let contentHTML = data.content;
 
         if (infoList.length > 0) {
-          contentHTML += `<div class="highlight" style="margin-top: 16px; border-left-color: var(--accent2);">
-            <strong style="color: var(--accent2);">付加情報により解説が更新されました</strong><br>
-            ${infoList.length}件の情報が追加されています。
-          </div>`;
-          
-          // 付加情報のサマリーを追加
-          infoList.forEach((info, index) => {
-            const typeLabel = info.type === 'text' ? 'テキスト' : 
-                             info.type === 'url' ? 'URL' : 'ファイル';
-            const icon = info.type === 'text' ? '📝' : 
-                        info.type === 'url' ? '🔗' : '📎';
-            
-            contentHTML += `<p style="font-size: 13px; color: var(--text-muted); margin-top: 8px;">
-              ${icon} <span style="font-weight: 600;">[${typeLabel}]</span> ${info.preview}
-            </p>`;
-          });
+          contentHTML = `
+            <div class="highlight" style="margin-bottom: 16px; border-left-color: var(--accent2);">
+              <strong style="color: var(--accent2);">Gemini APIにより解説が向上されました</strong><br>
+              <span style="font-size: 12px; color: var(--text-muted);">${infoList.length}件の付加情報を解析済み</span>
+            </div>
+          ` + data.content;
         }
 
         document.getElementById('detail-content').innerHTML = contentHTML;
       }
 
-      // ── 付加情報一覧モーダル ──
+      // ── 付加情報一覧画面 ──
+      let infoListReturnTopicId = null;
+      
       function openViewInfoModal() {
+        const topicId = getTopicInfoKey();
+        if (!topicId) return;
+        
+        infoListReturnTopicId = topicId;
+        const data = findData(topicId);
+        const topicName = data ? data.name : 'トピック';
+        
+        document.getElementById('info-list-topic-name').textContent = topicName;
         renderInfoList();
-        document.getElementById('view-info-modal').classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-      }
-
-      function closeViewInfoModal() {
-        document.getElementById('view-info-modal').classList.add('hidden');
-        document.body.style.overflow = '';
-      }
-
-      function closeViewInfoModalIfOutside(e) {
-        if (e.target === document.getElementById('view-info-modal')) {
-          closeViewInfoModal();
-        }
+        showScreen('screen-info-list');
+        document.getElementById('app-header').classList.add('show-back');
+        window.scrollTo(0, 0);
       }
 
       function renderInfoList() {
@@ -3511,7 +3626,7 @@
               </div>
               <div class="info-list-item-content">${escapeHtml(info.preview)}</div>
               <div class="info-list-item-actions">
-                <button class="info-list-item-delete" onclick="removeSupplementaryInfo('${topicId}', '${info.id}'); updateDetailContent('${topicId}');">
+                <button class="info-list-item-delete" onclick="deleteInfoAndRefresh('${topicId}', '${info.id}')">
                   削除
                 </button>
               </div>
@@ -3520,6 +3635,11 @@
         }).join('');
       }
 
+      function deleteInfoAndRefresh(topicId, infoId) {
+        removeSupplementaryInfo(topicId, infoId);
+        renderInfoList();
+      }
+      
       function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
