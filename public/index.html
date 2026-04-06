@@ -1267,6 +1267,92 @@
         background: rgba(61, 153, 112, 0.2);
       }
 
+      /* ── タブ切り替え ── */
+      .detail-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--surface2);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        margin-bottom: 20px;
+      }
+      .detail-tab {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .detail-tab.active {
+        background: var(--surface);
+        color: var(--text);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(26, 51, 40, 0.08);
+      }
+      .detail-tab .tab-count {
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .detail-tab.active .tab-count {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      /* タブコンテンツ */
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* ── フローティングアクションボタン ── */
+      .fab {
+        position: fixed;
+        bottom: calc(24px + var(--safe-bottom));
+        right: calc(20px + var(--safe-right));
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gradient-start) 0%, var(--accent) 100%);
+        border: none;
+        box-shadow: 0 4px 16px rgba(61, 153, 112, 0.35), 0 2px 4px rgba(0,0,0,0.1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        z-index: 100;
+        transition: all 0.2s;
+      }
+      .fab:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(61, 153, 112, 0.3);
+      }
+      .fab.hidden {
+        display: none !important;
+      }
+      .fab svg {
+        width: 24px;
+        height: 24px;
+      }
+
       /* ── 付加情報ボタン ── */
       .supplementary-buttons {
         display: flex;
@@ -1733,19 +1819,54 @@
         justify-content: flex-end;
         margin-top: 10px;
       }
-      .info-list-item-delete {
+      .info-list-item-btn {
         background: none;
-        border: 1px solid rgba(200, 80, 80, 0.3);
+        border: 1px solid var(--border);
         border-radius: 8px;
-        color: #c85050;
+        color: var(--text-dim);
         font-size: 12px;
         font-family: "Zen Kaku Gothic New", sans-serif;
         padding: 6px 12px;
         cursor: pointer;
         transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
       }
-      .info-list-item-delete:active {
+      .info-list-item-btn:active {
+        background: var(--surface2);
+      }
+      .info-list-item-btn.delete {
+        border-color: rgba(200, 80, 80, 0.3);
+        color: #c85050;
+      }
+      .info-list-item-btn.delete:active {
         background: rgba(200, 80, 80, 0.1);
+      }
+
+      /* 情報一覧内の追加ボタン */
+      .info-list-add-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--surface);
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin-top: 12px;
+        cursor: pointer;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.15s;
+      }
+      .info-list-add-btn:active {
+        background: var(--surface2);
+        border-color: var(--accent);
+        color: var(--accent);
       }
 
       .depth-max {
@@ -1934,68 +2055,74 @@
         <p class="detail-label" id="detail-label"></p>
         <h2 class="detail-title" id="detail-title"></h2>
         <div class="tag-row" id="detail-tags"></div>
-        <div class="detail-content" id="detail-content"></div>
         
-        <!-- 付加情報ボタン -->
-        <div class="supplementary-buttons">
-          <button class="btn-add-info" onclick="openAddInfoModal()">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="16"></line>
-              <line x1="8" y1="12" x2="16" y2="12"></line>
+        <!-- タブ切り替え -->
+        <div class="detail-tabs">
+          <button class="detail-tab active" id="tab-explanation" onclick="switchTab('explanation')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
             </svg>
-            情報を追加
+            解説
           </button>
-          <button class="btn-view-info" onclick="openViewInfoModal()">
+          <button class="detail-tab" id="tab-info-list" onclick="switchTab('info-list')">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
               <line x1="16" y1="17" x2="8" y2="17"></line>
             </svg>
-            一覧
-            <span class="info-count" id="info-count">0</span>
+            追加情報
+            <span class="tab-count" id="tab-info-count">0</span>
           </button>
         </div>
         
-        <div class="related-section" id="related-section"></div>
-        <div id="next-section">
-          <div class="btn-drill-wrap" id="btn-drill-wrap">
-            <button class="btn-drill" onclick="openDrillModal()">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path
-                  d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
-                ></path>
-                <path
-                  d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
-                ></path>
-              </svg>
-              さらに深掘りする
-            </button>
+        <!-- 解説タブコンテンツ -->
+        <div class="tab-content active" id="content-explanation">
+          <div class="detail-content" id="detail-content"></div>
+          <div class="related-section" id="related-section"></div>
+          <div id="next-section">
+            <div class="btn-drill-wrap" id="btn-drill-wrap">
+              <button class="btn-drill" onclick="openDrillModal()">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+                  ></path>
+                  <path
+                    d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
+                  ></path>
+                </svg>
+                さらに深掘りする
+              </button>
+            </div>
+            <div id="next-cards"></div>
           </div>
-          <div id="next-cards"></div>
+        </div>
+        
+        <!-- 追加情報タブコンテンツ -->
+        <div class="tab-content" id="content-info-list">
+          <div class="info-list-body" id="tab-info-list-body">
+            <!-- 動的に生成される -->
+          </div>
         </div>
       </div>
 
-      <!-- INFO LIST SCREEN (付加情報一覧画面) -->
-      <div id="screen-info-list" class="hidden">
-        <div class="info-list-page-header">
-          <p class="detail-label">付加情報一覧</p>
-          <h2 class="detail-title" id="info-list-topic-name"></h2>
-        </div>
-        <div class="info-list-body" id="info-list-body">
-          <!-- 動的に生成される -->
-        </div>
-      </div>
+      <!-- フローティングアクションボタン -->
+      <button class="fab hidden" id="fab-add-info" onclick="openAddInfoModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
 
       <!-- 付加情報追加ダイアログ -->
       <div
@@ -2230,7 +2357,7 @@
                 { label: "J-POP / アニソン", type: "genre" },
                 { label: "タイアップ戦略", type: "key" },
               ],
-              content: `<p>アニメと音楽のタイアップ戦略は1990年代に本格化した。<strong>フジテレビ系アニメ</strong>が積極的にJ-POPアーティストを起用したことで、アニメの主題歌がシングルチャートを席巻する時代が訪れた。</p><div class="highlight">「SLAM DUNK」「幽遊白書」「ドラゴンボールZ」...タイアップは両者に相乗効果をもたらした。</div><p>2000年代以降は「アニソン」が独立したジャンルとして確立。LiSA、Aimer、YOASOBIなどがアニメを入口に世界規模で認知されるアーティストとな��、<strong>グローバルな日本文化発信</strong>の重要な柱となった。</p>`,
+              content: `<p>アニメと音楽のタイアップ戦略は1990年代に本格化した。<strong>フジテレビ系アニメ</strong>が積極的にJ-POPアーティストを起用したことで、アニメの主題歌がシングルチャートを席巻する時代が訪���た。</p><div class="highlight">「SLAM DUNK」「幽遊白書」「ドラゴンボールZ」...タイアップは両者に相乗効果をもたらした。</div><p>2000年代以降は「アニソン」が独立したジャンルとして確立。LiSA、Aimer、YOASOBIなどがアニメを入口に世界規模で認知されるアーティストとな��、<strong>グローバルな日本文化発信</strong>の重要な柱となった。</p>`,
               next: [
                 {
                   id: "90s_jpop",
@@ -2770,7 +2897,7 @@
         },
         ai_music: {
           icon: "🧠",
-          name: "AI音楽生成の現在",
+          name: "AI音��生成の現在",
           parentId: "vocaloid",
           parentName: "ボカロ文化の台頭",
           tags: [
@@ -2931,9 +3058,17 @@
           "screen-topics",
           "screen-detail",
           "screen-loading",
-          "screen-info-list",
         ].forEach((s) => document.getElementById(s).classList.add("hidden"));
         document.getElementById(id).classList.remove("hidden");
+        
+        // FABの表示制御
+        if (id === 'screen-detail') {
+          showFab();
+          // タブを解説にリセット
+          switchTab('explanation');
+        } else {
+          hideFab();
+        }
       }
 
       // ══════════════════════════════════════════════════════
@@ -2946,15 +3081,6 @@
       }
 
       function goBack() {
-        // 付加情報一覧画面からの戻り
-        if (!document.getElementById('screen-info-list').classList.contains('hidden')) {
-          if (infoListReturnTopicId) {
-            renderDetailScreen(infoListReturnTopicId, false);
-            infoListReturnTopicId = null;
-          }
-          return;
-        }
-        
         if (state.path.length === 0) {
           goHome();
           return;
@@ -2963,6 +3089,7 @@
           state.path = [];
           updateHeader();
           renderTopicsScreen();
+          hideFab();
           return;
         }
         state.path = state.path.slice(0, -1);
@@ -3439,21 +3566,67 @@
             info => info.id !== infoId
           );
           updateInfoCount();
-          renderInfoList();
+        }
+      }
+
+      function updateSupplementaryInfo(topicId, infoId, newInfo) {
+        if (supplementaryInfoStore[topicId]) {
+          const index = supplementaryInfoStore[topicId].findIndex(info => info.id === infoId);
+          if (index !== -1) {
+            supplementaryInfoStore[topicId][index] = {
+              ...supplementaryInfoStore[topicId][index],
+              ...newInfo,
+              updatedAt: new Date().toISOString()
+            };
+          }
         }
       }
 
       function updateInfoCount() {
         const topicId = getTopicInfoKey();
         const count = topicId ? getSupplementaryInfo(topicId).length : 0;
-        const countEl = document.getElementById('info-count');
-        if (countEl) {
-          countEl.textContent = count;
+        const tabCountEl = document.getElementById('tab-info-count');
+        if (tabCountEl) {
+          tabCountEl.textContent = count;
         }
+      }
+
+      // ── タブ切り替え ──
+      let currentTab = 'explanation';
+      
+      function switchTab(tabName) {
+        currentTab = tabName;
+        
+        // タブボタンの状態更新
+        document.getElementById('tab-explanation').classList.toggle('active', tabName === 'explanation');
+        document.getElementById('tab-info-list').classList.toggle('active', tabName === 'info-list');
+        
+        // タブコンテンツの表示切り替え
+        document.getElementById('content-explanation').classList.toggle('active', tabName === 'explanation');
+        document.getElementById('content-info-list').classList.toggle('active', tabName === 'info-list');
+        
+        // FABの表示制御（詳細画面でのみ表示）
+        const fab = document.getElementById('fab-add-info');
+        const isDetailScreen = !document.getElementById('screen-detail').classList.contains('hidden');
+        fab.classList.toggle('hidden', !isDetailScreen);
+        
+        // 追加情報タブの場合はリストを更新
+        if (tabName === 'info-list') {
+          renderTabInfoList();
+        }
+      }
+
+      function showFab() {
+        document.getElementById('fab-add-info').classList.remove('hidden');
+      }
+
+      function hideFab() {
+        document.getElementById('fab-add-info').classList.add('hidden');
       }
 
       // ── 付加情報追加モーダル ──
       function openAddInfoModal() {
+        editingInfoId = null;
         document.getElementById('info-type-select').value = 'text';
         document.getElementById('info-textarea').value = '';
         document.getElementById('info-url-input').value = '';
@@ -3461,6 +3634,12 @@
         document.getElementById('info-file-preview').classList.add('hidden');
         document.getElementById('info-file-input').value = '';
         onInfoTypeChange();
+        
+        // タイトルを追加モードにリセット
+        document.querySelector('.info-dialog-title').textContent = '付加情報を追加';
+        document.querySelector('.info-dialog-sub').textContent = '解説の内容を向上させる情報を追加します';
+        document.querySelector('.info-submit-btn').textContent = '情報を追加して解説を更新';
+        
         document.getElementById('add-info-modal').classList.remove('hidden');
         document.body.style.overflow = 'hidden';
       }
@@ -3551,7 +3730,14 @@
           // 実際の実装ではファイルをアップロードする
         }
 
-        addSupplementaryInfo(topicId, info);
+        if (editingInfoId) {
+          // 編集モード: 既存の情報を更新
+          updateSupplementaryInfo(topicId, editingInfoId, info);
+          editingInfoId = null;
+        } else {
+          // 追加モード
+          addSupplementaryInfo(topicId, info);
+        }
         closeAddInfoModal();
         showAnalyzingDialog(topicId);
       }
@@ -3598,28 +3784,13 @@
         document.getElementById('detail-content').innerHTML = contentHTML;
       }
 
-      // ── 付加情報一覧画面 ──
-      let infoListReturnTopicId = null;
+      // ── 付加情報一覧（タブ内表示） ──
+      let editingInfoId = null;
       
-      function openViewInfoModal() {
-        const topicId = getTopicInfoKey();
-        if (!topicId) return;
-        
-        infoListReturnTopicId = topicId;
-        const data = findData(topicId);
-        const topicName = data ? data.name : 'トピック';
-        
-        document.getElementById('info-list-topic-name').textContent = topicName;
-        renderInfoList();
-        showScreen('screen-info-list');
-        document.getElementById('app-header').classList.add('show-back');
-        window.scrollTo(0, 0);
-      }
-
-      function renderInfoList() {
+      function renderTabInfoList() {
         const topicId = getTopicInfoKey();
         const infoList = topicId ? getSupplementaryInfo(topicId) : [];
-        const bodyEl = document.getElementById('info-list-body');
+        const bodyEl = document.getElementById('tab-info-list-body');
 
         if (infoList.length === 0) {
           bodyEl.innerHTML = `
@@ -3627,11 +3798,18 @@
               <div class="info-list-empty-icon">📭</div>
               <div class="info-list-empty-text">まだ付加情報がありません</div>
             </div>
+            <button class="info-list-add-btn" onclick="openAddInfoModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              情報を追加する
+            </button>
           `;
           return;
         }
 
-        bodyEl.innerHTML = infoList.map(info => {
+        let html = infoList.map(info => {
           const typeLabel = info.type === 'text' ? 'テキスト' : 
                            info.type === 'url' ? 'URL' : 'ファイル';
           const icon = info.type === 'text' ? '📝' : 
@@ -3651,18 +3829,70 @@
               </div>
               <div class="info-list-item-content">${escapeHtml(info.preview)}</div>
               <div class="info-list-item-actions">
-                <button class="info-list-item-delete" onclick="deleteInfoAndRefresh('${topicId}', '${info.id}')">
+                <button class="info-list-item-btn" onclick="editInfo('${topicId}', '${info.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  編集
+                </button>
+                <button class="info-list-item-btn delete" onclick="deleteInfoAndRefresh('${topicId}', '${info.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
                   削除
                 </button>
               </div>
             </div>
           `;
         }).join('');
+        
+        html += `
+          <button class="info-list-add-btn" onclick="openAddInfoModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            情報を追加する
+          </button>
+        `;
+        
+        bodyEl.innerHTML = html;
+      }
+
+      function editInfo(topicId, infoId) {
+        const infoList = getSupplementaryInfo(topicId);
+        const info = infoList.find(i => i.id === infoId);
+        if (!info) return;
+        
+        editingInfoId = infoId;
+        
+        // ダイアログを編集モードで開く
+        document.getElementById('info-type-select').value = info.type;
+        onInfoTypeChange();
+        
+        if (info.type === 'text') {
+          document.getElementById('info-textarea').value = info.content;
+        } else if (info.type === 'url') {
+          document.getElementById('info-url-input').value = info.content;
+        }
+        // ファイルは再選択が必要
+        
+        // ダイアログのタイトルを変更
+        document.querySelector('.info-dialog-title').textContent = '付加情報を編集';
+        document.querySelector('.info-dialog-sub').textContent = '情報の内容を更新します';
+        document.querySelector('.info-submit-btn').textContent = '変更を保存して解説を更新';
+        
+        document.getElementById('add-info-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
       }
 
       function deleteInfoAndRefresh(topicId, infoId) {
+        if (!confirm('この付加情報を削除しますか？')) return;
         removeSupplementaryInfo(topicId, infoId);
-        renderInfoList();
+        renderTabInfoList();
+        updateDetailContent(topicId);
       }
       
       function escapeHtml(text) {
