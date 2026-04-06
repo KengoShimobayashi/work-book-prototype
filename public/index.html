@@ -1333,45 +1333,68 @@
         color: var(--accent);
       }
 
-      /* ── 付加情報モーダル ── */
-      .info-modal-overlay {
+      /* ── 付加情報ダイアログ ── */
+      .info-dialog-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(26, 51, 40, 0.45);
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        background: rgba(26, 51, 40, 0.5);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         z-index: 500;
         display: flex;
-        align-items: flex-end;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
         animation: fadeIn 0.2s ease both;
       }
-      .info-modal-overlay.hidden {
+      .info-dialog-overlay.hidden {
         display: none !important;
       }
-      .info-modal-sheet {
+      .info-dialog {
         width: 100%;
+        max-width: 400px;
         background: var(--surface);
-        border-radius: 24px 24px 0 0;
-        padding: 0 0 calc(24px + var(--safe-bottom)) 0;
-        animation: slideUp 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-        max-height: 90vh;
+        border-radius: var(--radius);
+        box-shadow: 0 20px 60px rgba(26, 51, 40, 0.25);
+        animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        max-height: calc(100vh - 40px);
         overflow-y: auto;
       }
-      .info-modal-header {
-        padding: 16px 20px 12px;
+      .info-dialog-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 20px 16px;
         border-bottom: 1px solid var(--border);
       }
-      .info-modal-title {
-        font-size: 16px;
+      .info-dialog-header-text {
+        flex: 1;
+      }
+      .info-dialog-title {
+        font-size: 17px;
         font-weight: 700;
         color: var(--text);
         margin-bottom: 4px;
       }
-      .info-modal-sub {
+      .info-dialog-sub {
         font-size: 12px;
         color: var(--text-muted);
       }
-      .info-modal-body {
+      .info-dialog-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        margin: -4px -4px 0 8px;
+        line-height: 1;
+        transition: color 0.15s;
+      }
+      .info-dialog-close:hover {
+        color: var(--text);
+      }
+      .info-dialog-body {
         padding: 20px;
       }
 
@@ -1974,19 +1997,21 @@
         </div>
       </div>
 
-      <!-- 付加情報追加モーダル -->
+      <!-- 付加情報追加ダイアログ -->
       <div
-        class="info-modal-overlay hidden"
+        class="info-dialog-overlay hidden"
         id="add-info-modal"
         onclick="closeAddInfoModalIfOutside(event)"
       >
-        <div class="info-modal-sheet">
-          <div class="modal-handle"></div>
-          <div class="info-modal-header">
-            <div class="info-modal-title">付加情報を追加</div>
-            <div class="info-modal-sub">解説の内容を向上させる情報を追加します</div>
+        <div class="info-dialog">
+          <div class="info-dialog-header">
+            <div class="info-dialog-header-text">
+              <div class="info-dialog-title">付加情報を追加</div>
+              <div class="info-dialog-sub">解説の内容を向上させる情報を追加します</div>
+            </div>
+            <button class="info-dialog-close" onclick="closeAddInfoModal()">&times;</button>
           </div>
-          <div class="info-modal-body">
+          <div class="info-dialog-body">
             <div class="info-type-label">情報の種類を選択</div>
             <select class="info-type-select" id="info-type-select" onchange="onInfoTypeChange()">
               <option value="text">直接入力（テキスト）</option>
@@ -2714,11 +2739,11 @@
             { label: "2010年代〜", type: "era" },
             { label: "グローバル戦略", type: "genre" },
           ],
-          content: `<p><strong>K-POP</strong>は国家的な文化輸出戦略、英語圏向けプロモーション、厳格なトレーニングシステム、そしてビジュアルアイデンティティの統一によって世界市場を攻略した。</p><div class="highlight">対してJ-POPは意図的な世界戦略なしに「コンテンツ（アニメ・マンガ）の付随物として」世界へ広まった。YOASOBI「アイドル」は日本語のままグローバルチャート1位を取った。アプローチの違いが際立つ。</div><p>J-POPの自然な流通は<strong>文化的文脈と不可分</strong>であるという強みを持つ。コンテンツと音楽が一体化した戦略の可能性を示している。</p>`,
+          content: `<p><strong>K-POP</strong>は国家的な文化輸出戦略、英語圏向けプロモーション、厳格なトレーニングシステム、そしてビジュアルアイデンティティの統一によって世界市場を攻略した。</p><div class="highlight">対してJ-POPは意図的な世界戦略なしに「コンテンツ（アニメ・マンガ）の付随物とし��」世界へ広まった。YOASOBI「アイドル」は日本語のままグローバルチャート1位を取った。アプローチの違いが際立つ。</div><p>J-POPの自然な流通は<strong>文化的文脈と不可分</strong>であるという強みを持つ。コンテンツと音楽が一体化した戦略の可能性を示している。</p>`,
           next: [
             {
               id: "japan_soft_power",
-              icon: "🗾",
+              icon: "���",
               name: "日本のソフトパワー戦略",
               hint: "クールジャパンの評価と課題",
             },
@@ -3446,7 +3471,7 @@
       }
 
       function closeAddInfoModalIfOutside(e) {
-        if (e.target === document.getElementById('add-info-modal')) {
+        if (e.target.classList.contains('info-dialog-overlay')) {
           closeAddInfoModal();
         }
       }
