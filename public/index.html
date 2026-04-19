@@ -1267,6 +1267,608 @@
         background: rgba(61, 153, 112, 0.2);
       }
 
+      /* ── タブ切り替え ── */
+      .detail-tabs {
+        display: flex;
+        gap: 4px;
+        background: var(--surface2);
+        border-radius: var(--radius-sm);
+        padding: 4px;
+        margin-bottom: 20px;
+      }
+      .detail-tab {
+        flex: 1;
+        padding: 12px 16px;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .detail-tab.active {
+        background: var(--surface);
+        color: var(--text);
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(26, 51, 40, 0.08);
+      }
+      .detail-tab .tab-count {
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        padding: 2px 7px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .detail-tab.active .tab-count {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+      }
+
+      /* タブコンテンツ */
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* ── フローティングアクションボタン ── */
+      .fab {
+        position: fixed;
+        bottom: calc(24px + var(--safe-bottom));
+        right: calc(20px + var(--safe-right));
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gradient-start) 0%, var(--accent) 100%);
+        border: none;
+        box-shadow: 0 4px 16px rgba(61, 153, 112, 0.35), 0 2px 4px rgba(0,0,0,0.1);
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        z-index: 100;
+        transition: all 0.2s;
+      }
+      .fab:active {
+        transform: scale(0.95);
+        box-shadow: 0 2px 8px rgba(61, 153, 112, 0.3);
+      }
+      .fab.hidden {
+        display: none !important;
+      }
+      .fab svg {
+        width: 24px;
+        height: 24px;
+      }
+
+      /* ── 付加情報ボタン ── */
+      .supplementary-buttons {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .btn-add-info {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(
+          135deg,
+          rgba(90, 165, 200, 0.1) 0%,
+          rgba(90, 165, 200, 0.15) 100%
+        );
+        border: 1.5px solid rgba(90, 165, 200, 0.3);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        cursor: pointer;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent2);
+        transition: all 0.15s;
+        user-select: none;
+      }
+      .btn-add-info:active {
+        background: rgba(90, 165, 200, 0.2);
+        transform: scale(0.99);
+      }
+      .btn-add-info svg {
+        flex-shrink: 0;
+      }
+      .btn-view-info {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        cursor: pointer;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-dim);
+        transition: all 0.15s;
+        user-select: none;
+        white-space: nowrap;
+      }
+      .btn-view-info:active {
+        background: var(--surface2);
+      }
+      .btn-view-info .info-count {
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        padding: 2px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+      }
+
+      /* ── 付加情報ダイアログ ── */
+      .info-dialog-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 51, 40, 0.5);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        z-index: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        animation: fadeIn 0.2s ease both;
+      }
+      .info-dialog-overlay.hidden {
+        display: none !important;
+      }
+      .info-dialog {
+        width: 100%;
+        max-width: 400px;
+        background: var(--surface);
+        border-radius: var(--radius);
+        box-shadow: 0 20px 60px rgba(26, 51, 40, 0.25);
+        animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+      }
+      .info-dialog-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        padding: 20px 20px 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      .info-dialog-header-text {
+        flex: 1;
+      }
+      .info-dialog-title {
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 4px;
+      }
+      .info-dialog-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      .info-dialog-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 0;
+        margin: -4px -4px 0 8px;
+        line-height: 1;
+        transition: color 0.15s;
+      }
+      .info-dialog-close:hover {
+        color: var(--text);
+      }
+      .info-dialog-body {
+        padding: 20px;
+      }
+
+      /* 種類選択 */
+      .info-type-label {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--text-muted);
+        margin-bottom: 8px;
+        letter-spacing: 0.5px;
+      }
+      .info-type-select {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 15px;
+        outline: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236b8a7a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 20px;
+        cursor: pointer;
+        transition: border-color 0.2s;
+        margin-bottom: 16px;
+      }
+      .info-type-select:focus {
+        border-color: var(--accent);
+      }
+
+      /* 入力エリア */
+      .info-input-area {
+        margin-bottom: 20px;
+      }
+      .info-input-area.hidden {
+        display: none !important;
+      }
+      .info-textarea {
+        width: 100%;
+        min-height: 120px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 14px;
+        line-height: 1.6;
+        outline: none;
+        resize: vertical;
+        transition: border-color 0.2s;
+      }
+      .info-textarea:focus {
+        border-color: var(--accent);
+      }
+      .info-textarea::placeholder {
+        color: var(--text-muted);
+      }
+      .info-url-input {
+        width: 100%;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        color: var(--text);
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 15px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .info-url-input:focus {
+        border-color: var(--accent);
+      }
+      .info-url-input::placeholder {
+        color: var(--text-muted);
+      }
+      .info-file-drop {
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-sm);
+        padding: 32px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--bg);
+      }
+      .info-file-drop:hover,
+      .info-file-drop.dragover {
+        border-color: var(--accent);
+        background: rgba(61, 153, 112, 0.04);
+      }
+      .info-file-drop-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .info-file-drop-text {
+        font-size: 13px;
+        color: var(--text-dim);
+        margin-bottom: 4px;
+      }
+      .info-file-drop-hint {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .info-file-input {
+        display: none;
+      }
+      .info-file-preview {
+        margin-top: 12px;
+        padding: 12px;
+        background: rgba(61, 153, 112, 0.08);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .info-file-preview.hidden {
+        display: none !important;
+      }
+      .info-file-preview-icon {
+        font-size: 24px;
+      }
+      .info-file-preview-name {
+        flex: 1;
+        font-size: 13px;
+        color: var(--text);
+        font-weight: 500;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .info-file-remove {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 18px;
+        cursor: pointer;
+        padding: 4px;
+      }
+
+      /* 確定ボタン */
+      .info-submit-btn {
+        width: 100%;
+        background: linear-gradient(
+          135deg,
+          var(--gradient-start) 0%,
+          var(--accent) 100%
+        );
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 16px 20px;
+        color: #fff;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.15s;
+        box-shadow: 0 4px 12px rgba(61, 153, 112, 0.3);
+      }
+      .info-submit-btn:active {
+        transform: scale(0.99);
+      }
+      .info-submit-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* ── 解析中ダイアログ ── */
+      .analyzing-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 51, 40, 0.6);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.2s ease both;
+      }
+      .analyzing-overlay.hidden {
+        display: none !important;
+      }
+      .analyzing-dialog {
+        background: var(--surface);
+        border-radius: var(--radius);
+        padding: 32px 28px;
+        text-align: center;
+        max-width: 280px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(26, 51, 40, 0.3);
+        animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      }
+      @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+      }
+      .analyzing-spinner {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--surface2);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        margin: 0 auto 16px;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .analyzing-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 6px;
+      }
+      .analyzing-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+      .analyzing-progress {
+        margin-top: 16px;
+        height: 4px;
+        background: var(--surface2);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .analyzing-progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        width: 0%;
+        animation: progressAnim 2.5s ease-in-out forwards;
+      }
+      @keyframes progressAnim {
+        0% { width: 0%; }
+        30% { width: 40%; }
+        60% { width: 70%; }
+        80% { width: 85%; }
+        100% { width: 100%; }
+      }
+
+      /* ── 付加情報一覧画面 ── */
+      .info-list-page-header {
+        margin-bottom: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+      #screen-info-list .info-list-body {
+        padding: 0;
+      }
+      #screen-info-list .info-list-empty {
+        padding: 60px 20px;
+      }
+      .info-list-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 20px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .info-list-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .info-list-close {
+        background: none;
+        border: none;
+        color: var(--text-muted);
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+      }
+      .info-list-body {
+        padding: 16px 20px;
+      }
+      .info-list-empty {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-muted);
+      }
+      .info-list-empty-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+        opacity: 0.5;
+      }
+      .info-list-empty-text {
+        font-size: 14px;
+      }
+      .info-list-item {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        margin-bottom: 10px;
+      }
+      .info-list-item:last-child {
+        margin-bottom: 0;
+      }
+      .info-list-item-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+      .info-list-item-type {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        background: var(--pill-bg);
+        border: 1px solid var(--pill-border);
+        border-radius: 16px;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent);
+      }
+      .info-list-item-date {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+      .info-list-item-content {
+        font-size: 13px;
+        color: var(--text-dim);
+        line-height: 1.5;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+      }
+      .info-list-item-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 10px;
+      }
+      .info-list-item-btn {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--text-dim);
+        font-size: 12px;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        padding: 6px 12px;
+        cursor: pointer;
+        transition: all 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .info-list-item-btn:active {
+        background: var(--surface2);
+      }
+      .info-list-item-btn.delete {
+        border-color: rgba(200, 80, 80, 0.3);
+        color: #c85050;
+      }
+      .info-list-item-btn.delete:active {
+        background: rgba(200, 80, 80, 0.1);
+      }
+
+      /* 情報一覧内の追加ボタン */
+      .info-list-add-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: var(--surface);
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-sm);
+        padding: 16px;
+        margin-top: 12px;
+        cursor: pointer;
+        font-family: "Zen Kaku Gothic New", sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.15s;
+      }
+      .info-list-add-btn:active {
+        background: var(--surface2);
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
       .depth-max {
         background: linear-gradient(
           135deg,
@@ -1453,32 +2055,162 @@
         <p class="detail-label" id="detail-label"></p>
         <h2 class="detail-title" id="detail-title"></h2>
         <div class="tag-row" id="detail-tags"></div>
-        <div class="detail-content" id="detail-content"></div>
-        <div class="related-section" id="related-section"></div>
-        <div id="next-section">
-          <div class="btn-drill-wrap" id="btn-drill-wrap">
-            <button class="btn-drill" onclick="openDrillModal()">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+        
+        <!-- タブ切り替え -->
+        <div class="detail-tabs">
+          <button class="detail-tab active" id="tab-explanation" onclick="switchTab('explanation')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+            解説
+          </button>
+          <button class="detail-tab" id="tab-info-list" onclick="switchTab('info-list')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+            追加情報
+            <span class="tab-count" id="tab-info-count">0</span>
+          </button>
+        </div>
+        
+        <!-- 解説タブコンテンツ -->
+        <div class="tab-content active" id="content-explanation">
+          <div class="detail-content" id="detail-content"></div>
+          <div class="related-section" id="related-section"></div>
+          <div id="next-section">
+            <div class="btn-drill-wrap" id="btn-drill-wrap">
+              <button class="btn-drill" onclick="openDrillModal()">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+                  ></path>
+                  <path
+                    d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
+                  ></path>
+                </svg>
+                さらに深掘りする
+              </button>
+            </div>
+            <div id="next-cards"></div>
+          </div>
+        </div>
+        
+        <!-- 追加情報タブコンテンツ -->
+        <div class="tab-content" id="content-info-list">
+          <div class="info-list-body" id="tab-info-list-body">
+            <!-- 動的に生成される -->
+          </div>
+        </div>
+      </div>
+
+      <!-- フローティングアクションボタン -->
+      <button class="fab hidden" id="fab-add-info" onclick="openAddInfoModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+
+      <!-- 付加情報追加ダイアログ -->
+      <div
+        class="info-dialog-overlay hidden"
+        id="add-info-modal"
+        onclick="closeAddInfoModalIfOutside(event)"
+      >
+        <div class="info-dialog">
+          <div class="info-dialog-header">
+            <div class="info-dialog-header-text">
+              <div class="info-dialog-title">付加情報を追加</div>
+              <div class="info-dialog-sub">解説の内容を向上させる情報を追加します</div>
+            </div>
+            <button class="info-dialog-close" onclick="closeAddInfoModal()">&times;</button>
+          </div>
+          <div class="info-dialog-body">
+            <div class="info-type-label">情報の種類を選択</div>
+            <select class="info-type-select" id="info-type-select" onchange="onInfoTypeChange()">
+              <option value="text">直接入力（テキスト）</option>
+              <option value="url">URLリンク</option>
+              <option value="file">画像・PDFファイル</option>
+            </select>
+
+            <!-- 直接入力 -->
+            <div class="info-input-area" id="info-text-area">
+              <div class="info-type-label">付加情報を入力</div>
+              <textarea
+                class="info-textarea"
+                id="info-textarea"
+                placeholder="トピックに関する追加情報を入力してください...&#10;&#10;例: 最新の研究成果や補足説明など"
+              ></textarea>
+            </div>
+
+            <!-- URLリンク -->
+            <div class="info-input-area hidden" id="info-url-area">
+              <div class="info-type-label">URLを入力</div>
+              <input
+                type="url"
+                class="info-url-input"
+                id="info-url-input"
+                placeholder="https://example.com/article"
+              />
+            </div>
+
+            <!-- ファイルアップロード -->
+            <div class="info-input-area hidden" id="info-file-area">
+              <div class="info-type-label">ファイルをアップロード</div>
+              <div
+                class="info-file-drop"
+                id="info-file-drop"
+                onclick="document.getElementById('info-file-input').click()"
               >
-                <path
-                  d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
-                ></path>
-                <path
-                  d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"
-                ></path>
-              </svg>
-              さらに深掘りする
+                <div class="info-file-drop-icon">📎</div>
+                <div class="info-file-drop-text">クリックまたはドラッグ&ドロップ</div>
+                <div class="info-file-drop-hint">PDF、PNG、JPG、GIF形式に対応</div>
+              </div>
+              <input
+                type="file"
+                class="info-file-input"
+                id="info-file-input"
+                accept=".pdf,.png,.jpg,.jpeg,.gif"
+                onchange="onFileSelected(event)"
+              />
+              <div class="info-file-preview hidden" id="info-file-preview">
+                <div class="info-file-preview-icon" id="info-file-preview-icon">📄</div>
+                <div class="info-file-preview-name" id="info-file-preview-name"></div>
+                <button class="info-file-remove" onclick="removeSelectedFile()">&times;</button>
+              </div>
+            </div>
+
+            <button class="info-submit-btn" id="info-submit-btn" onclick="submitSupplementaryInfo()">
+              情報を追加して解説を更新
             </button>
           </div>
-          <div id="next-cards"></div>
+        </div>
+      </div>
+
+      <!-- 解析中ダイアログ -->
+      <div class="analyzing-overlay hidden" id="analyzing-overlay">
+        <div class="analyzing-dialog">
+          <div class="analyzing-spinner"></div>
+          <div class="analyzing-title">Gemini APIで解析中...</div>
+          <div class="analyzing-sub">
+            付加情報を解析して<br>解説内容を向上させています
+          </div>
+          <div class="analyzing-progress">
+            <div class="analyzing-progress-bar"></div>
+          </div>
         </div>
       </div>
 
@@ -1625,7 +2357,7 @@
                 { label: "J-POP / アニソン", type: "genre" },
                 { label: "タイアップ戦略", type: "key" },
               ],
-              content: `<p>アニメと音楽のタイアップ戦略は1990年代に本格化した。<strong>フジテレビ系アニメ</strong>が積極的にJ-POPアーティストを起用したことで、アニメの主題歌がシングルチャートを席巻する時代が訪れた。</p><div class="highlight">「SLAM DUNK」「幽遊白書」「ドラゴンボールZ」...タイアップは両者に相乗効果をもたらした。</div><p>2000年代以降は「アニソン」が独立したジャンルとして確立。LiSA、Aimer、YOASOBIなどがアニメを入口に世界規模で認知されるアーティストとなり、<strong>グローバルな日本文化発信</strong>の重要な柱となった。</p>`,
+              content: `<p>アニメと音楽のタイアップ戦略は1990年代に本格化した。<strong>フジテレビ系アニメ</strong>が積極的にJ-POPアーティストを起用したことで、アニメの主題歌がシングルチャートを席巻する時代が訪���た。</p><div class="highlight">「SLAM DUNK」「幽遊白書」「ドラゴンボールZ」...タイアップは両者に相乗効果をもたらした。</div><p>2000年代以降は「アニソン」が独立したジャンルとして確立。LiSA、Aimer、YOASOBIなどがアニメを入口に世界規模で認知されるアーティストとな��、<strong>グローバルな日本文化発信</strong>の重要な柱となった。</p>`,
               next: [
                 {
                   id: "90s_jpop",
@@ -1700,7 +2432,7 @@
             { label: "テクノポップ", type: "genre" },
             { label: "電子音楽", type: "key" },
           ],
-          content: `<p><strong>イエロー・マジック・オーケストラ（YMO）</strong>は1978年に細野晴臣、坂本龍一、高橋幸宏の3人で結成された。シンセサイザーとコンピュータを駆使したサウンドは世界中に衝撃を与え、テクノポップという新ジャンルを確立した。</p><div class="highlight">「テクノポリス」「ライディーン」は今なお世界中でサンプリングされ続けている。YMOの影響は音楽だけにとどまらず、ファッション・グラフィックデザイン・映像にまで及んだ。</div><p>細野晴臣は現在もアンビエント音楽の探求を続けており、数十年にわたって日本音楽の最前線に立ち続けている。</p>`,
+          content: `<p><strong>イエロー・マジック・オーケストラ（YMO）</strong>は1978年に細野晴臣、坂本龍一、高橋幸宏の3人で結成された。シンセサイザーとコンピュータを駆使したサウンドは世界中に衝撃を与え、テクノポップという新ジャンルを確立した。</p><div class="highlight">「テクノポリス」「ライディーン」は今なお世界中でサンプリングされ続けている。YMOの影響は音楽だけにとどまらず、ファッション・グラフィックデザイン・映像にまで及んだ。</div><p>細野晴臣は現在もアンビエント音��の探求を続けており、数十年にわたって日本音楽の最前線に立ち続けている。</p>`,
           next: [
             {
               id: "sakamoto",
@@ -1764,7 +2496,7 @@
             { label: "ロック", type: "genre" },
             { label: "言語論", type: "key" },
           ],
-          content: `<p>1960年代後半、グループサウンズが英語詞でロックを演奏する中、「日本語はロックに向かない」という議論が起きた。日本語の音節構造（子音+母音）がビートに乗りにくいという主張だ。</p><div class="highlight">はっぴいえんどはそれを「否」と証明した。松本隆の詞は日本語の母音の柔らかさをリズムの一部として活用し、英語ロックとは異なる独自の表現を生み出した。</div><p>この論争は内田裕也vs細野晴臣の形で具体化し、日本のロック界に大きな影響を与えた。今では当たり前となった日本語ロックの礎を作ったのは、この議論だった。</p>`,
+          content: `<p>1960年代後半、グループサウンズが英語詞でロックを演奏する中、「日本語はロックに向かない」という議論が起きた。日本語の音節構造（子音+母音）がビートに乗りにくいという主張だ。</p><div class="highlight">はっぴいえんどはそれを「否」と証明した。松本隆の詞は日本語の母音の柔らかさをリズムの一部として活用し、英語ロックとは異なる独自の表現を生み出した。</div><p>この論争は内田裕也vs細野晴臣の形で具体化し、日本のロック界に大きな���響を与えた。今では当たり前となった日本語ロックの礎を作ったのは、この議論だった。</p>`,
           next: [
             {
               id: "gs_era",
@@ -1906,7 +2638,7 @@
             { label: "J-POP", type: "genre" },
             { label: "小室哲哉", type: "key" },
           ],
-          content: `<p>1990年代はJ-POPの黄金期。<strong>小室哲哉</strong>プロデュースによるTRF・globe・安室奈美恵らが次々とミリオンヒットを連発し、CDシングルの売上が社会現象となった。</p><div class="highlight">1998年のCDシングル販売枚数は年間2億枚超。この時代の曲はカラオケ文化とも相乗効果を生み、音楽が最も「消費」された時代だった。</div><p>フジテレビ月9ドラマとの音楽タイアップも全盛期で、ドラマが音楽の宣伝媒体として機能した。配信以前の時代のメディアミックスの完成形だった。</p>`,
+          content: `<p>1990年代はJ-POPの黄金期。<strong>小室哲哉</strong>プロデュースによるTRF・globe・安室奈美恵らが次々とミリオンヒットを連発し、CDシングルの売上が社会現象となった。</p><div class="highlight">1998年のCDシングル販売枚数は年間2億枚超。この時代の曲はカラオケ文化とも相乗効果を生み、音楽が最も「消費」された時代だった。</div><p>フジテレビ月9ドラマとの音楽タイアップも全盛期で、ドラマが音楽の宣伝媒体として機能した。配���以前の時代のメディアミックスの完成形だった。</p>`,
           next: [
             {
               id: "komuro_decline",
@@ -2034,7 +2766,7 @@
             { label: "昭和30〜50年代", type: "era" },
             { label: "歌謡曲", type: "genre" },
           ],
-          content: `<p><strong>歌謡曲</strong>は1950〜80年代の日本のポップミュージックの総称。美空ひばりから山口百恵、沢田研二まで、多様なスターが活躍した。テレビの普及とともに「歌謡番組」が一大メディアとなった。</p><div class="highlight">「ザ・ベストテン」（TBS）は最高視聴率40%超を記録。歌謡曲の全盛期はテレビと音楽産業の蜜月関係の産物だった。</div><p>この時代の楽曲は演歌との境界が曖昧で、西洋のポップス・ロックの影響を受けながらも日本的な情感を保持していた。現代では「シティポップ」と並んで海外での再評価が進んでいる。</p>`,
+          content: `<p><strong>歌謡曲</strong>は1950〜80年代の日本のポップミュージックの総称。美空ひばりから山口百恵、沢田研二まで、多様なスターが活躍した。テレビの普及とともに「歌謡番組」が一大メディアとなった。</p><div class="highlight">「ザ・ベストテン」（TBS）は最高視聴率40%超を記録。歌謡曲の全盛期はテレビと音楽産業の蜜月関係の産物だった。</div><p>この時代の楽曲は演歌との境界が曖昧で、西洋のポップス・ロックの影響を受けながらも日本的な情感を保持していた。現代では「シティポ���プ」と並んで海外での再評価が進んでいる。</p>`,
           next: [
             {
               id: "enka_roots",
@@ -2134,11 +2866,11 @@
             { label: "2010年代〜", type: "era" },
             { label: "グローバル戦略", type: "genre" },
           ],
-          content: `<p><strong>K-POP</strong>は国家的な文化輸出戦略、英語圏向けプロモーション、厳格なトレーニングシステム、そしてビジュアルアイデンティティの統一によって世界市場を攻略した。</p><div class="highlight">対してJ-POPは意図的な世界戦略なしに「コンテンツ（アニメ・マンガ）の付随物として」世界へ広まった。YOASOBI「アイドル」は日本語のままグローバルチャート1位を取った。アプローチの違いが際立つ。</div><p>J-POPの自然な流通は<strong>文化的文脈と不可分</strong>であるという強みを持つ。コンテンツと音楽が一体化した戦略の可能性を示している。</p>`,
+          content: `<p><strong>K-POP</strong>は国家的な文化輸出戦略、英語圏向けプロモーション、厳格なトレーニングシステム、そしてビジュアルアイデンティティの統一によって世界市場を攻略した。</p><div class="highlight">対してJ-POPは意図的な世界戦略なしに「コンテンツ（アニメ・マンガ）の付随物とし��」世界へ広まった。YOASOBI「アイドル」は日本語のままグローバルチャート1位を取った。アプローチの違いが際立つ。</div><p>J-POPの自然な流通は<strong>文化的文脈と不可分</strong>であるという強みを持つ。コンテンツと音楽が一体化した戦略の可能性を示している。</p>`,
           next: [
             {
               id: "japan_soft_power",
-              icon: "🗾",
+              icon: "���",
               name: "日本のソフトパワー戦略",
               hint: "クールジャパンの評価と課題",
             },
@@ -2165,14 +2897,14 @@
         },
         ai_music: {
           icon: "🧠",
-          name: "AI音楽生成の現在",
+          name: "AI音��生成の現在",
           parentId: "vocaloid",
           parentName: "ボカロ文化の台頭",
           tags: [
             { label: "2020年代〜", type: "era" },
             { label: "AI音楽", type: "genre" },
           ],
-          content: `<p>Suno・Udio・Stable Audioなど<strong>AI音楽生成ツール</strong>の台頭は、ボカロが持っていた「誰でも音楽を作れる」という民主化を、さらに先まで推し進めている。テキストを入力するだけで楽曲が完成する。</p><div class="highlight">2024年にはAI生成楽曲をめぐる著作権論争が本格化。学習データとして使われた楽曲に対するアーティストへの報酬、AI楽曲の著作権帰属など、法整備が追いついていない。</div><p>一方でAIはプロの制作ツールとしても浸透しつつある。作曲補助・マスタリング・ボーカルクローニングなど、AIが創作プロセスに組み込まれることで「人間らしさ」の定義が問われている。</p>`,
+          content: `<p>Suno・Udio・Stable Audioなど<strong>AI音楽生成ツール</strong>の台頭は、ボカロが持っていた「誰でも音楽を作れる」という民主化を、さらに先まで推し進めている。テキストを入力するだけで楽曲が完成する。</p><div class="highlight">2024年にはAI生成楽曲をめぐる著作権論争が本格化��学習データとして使われた楽曲に対するアーティストへの報酬、AI楽曲の著作権帰属など、法整備が追いついていない。</div><p>一方でAIはプロの制作ツールとしても浸透しつつある。作曲補助・マスタリング・ボーカルクローニングなど、AIが創作プロセスに組み込まれることで「人間らしさ」の定義が問われている。</p>`,
           next: [
             {
               id: "copyright_music",
@@ -2328,6 +3060,15 @@
           "screen-loading",
         ].forEach((s) => document.getElementById(s).classList.add("hidden"));
         document.getElementById(id).classList.remove("hidden");
+        
+        // FABの表示制御
+        if (id === 'screen-detail') {
+          showFab();
+          // タブを解説にリセット
+          switchTab('explanation');
+        } else {
+          hideFab();
+        }
       }
 
       // ══════════════════════════════════════════════════════
@@ -2348,6 +3089,7 @@
           state.path = [];
           updateHeader();
           renderTopicsScreen();
+          hideFab();
           return;
         }
         state.path = state.path.slice(0, -1);
@@ -2496,7 +3238,7 @@
 
       // ══════════════════════════════════════════════════════
       // RENDER
-      // ══════════════════════════════════════════════════════
+      // ═══════════════════════════════════���══════════════════
       function renderTopicsScreen() {
         const themeData = DB[state.theme];
         document.getElementById("topics-theme-name").textContent = state.theme;
@@ -2700,6 +3442,13 @@
 
         showScreen("screen-detail");
         if (scrollTop) window.scrollTo(0, 0);
+        updateInfoCount();
+        
+        // 既存の付加情報があれば解説を更新
+        const existingInfo = getSupplementaryInfo(id);
+        if (existingInfo && existingInfo.length > 0) {
+          updateDetailContent(id);
+        }
       }
 
       function renderFallback(id) {
@@ -2732,6 +3481,7 @@
       <button class="btn-back-theme" onclick="goToTopics()">← テーマに戻る</button>
     </div>`;
         showScreen("screen-detail");
+        updateInfoCount();
       }
 
       function renderFreeDetail(name) {
@@ -2766,6 +3516,7 @@
         <button class="btn-back-theme" onclick="goToTopics()">← テーマに戻る</button>
       </div>`;
           showScreen("screen-detail");
+          updateInfoCount();
         }, 600);
       }
 
@@ -2779,6 +3530,415 @@
         .addEventListener("keydown", (e) => {
           if (e.key === "Enter") submitModalFree();
         });
+
+      // ══════════════════════════════════════════════════════
+      // SUPPLEMENTARY INFO SYSTEM
+      // ══════════════════════════════════════════════════════
+      
+      // 付加情報のストレージ（トピックIDごとに保存）
+      let supplementaryInfoStore = {};
+      let selectedFile = null;
+
+      function getTopicInfoKey() {
+        if (state.path.length === 0) return null;
+        return state.path[state.path.length - 1].id;
+      }
+
+      function getSupplementaryInfo(topicId) {
+        return supplementaryInfoStore[topicId] || [];
+      }
+
+      function addSupplementaryInfo(topicId, info) {
+        if (!supplementaryInfoStore[topicId]) {
+          supplementaryInfoStore[topicId] = [];
+        }
+        supplementaryInfoStore[topicId].push({
+          ...info,
+          id: 'info_' + Date.now(),
+          createdAt: new Date().toISOString()
+        });
+        updateInfoCount();
+      }
+
+      function removeSupplementaryInfo(topicId, infoId) {
+        if (supplementaryInfoStore[topicId]) {
+          supplementaryInfoStore[topicId] = supplementaryInfoStore[topicId].filter(
+            info => info.id !== infoId
+          );
+          updateInfoCount();
+        }
+      }
+
+      function updateSupplementaryInfo(topicId, infoId, newInfo) {
+        if (supplementaryInfoStore[topicId]) {
+          const index = supplementaryInfoStore[topicId].findIndex(info => info.id === infoId);
+          if (index !== -1) {
+            supplementaryInfoStore[topicId][index] = {
+              ...supplementaryInfoStore[topicId][index],
+              ...newInfo,
+              updatedAt: new Date().toISOString()
+            };
+          }
+        }
+      }
+
+      function updateInfoCount() {
+        const topicId = getTopicInfoKey();
+        const count = topicId ? getSupplementaryInfo(topicId).length : 0;
+        const tabCountEl = document.getElementById('tab-info-count');
+        if (tabCountEl) {
+          tabCountEl.textContent = count;
+        }
+      }
+
+      // ── タブ切り替え ──
+      let currentTab = 'explanation';
+      
+      function switchTab(tabName) {
+        currentTab = tabName;
+        
+        // タブボタンの状態更新
+        document.getElementById('tab-explanation').classList.toggle('active', tabName === 'explanation');
+        document.getElementById('tab-info-list').classList.toggle('active', tabName === 'info-list');
+        
+        // タブコンテンツの表示切り替え
+        document.getElementById('content-explanation').classList.toggle('active', tabName === 'explanation');
+        document.getElementById('content-info-list').classList.toggle('active', tabName === 'info-list');
+        
+        // FABの表示制御（詳細画面でのみ表示）
+        const fab = document.getElementById('fab-add-info');
+        const isDetailScreen = !document.getElementById('screen-detail').classList.contains('hidden');
+        fab.classList.toggle('hidden', !isDetailScreen);
+        
+        // 追加情報タブの場合はリストを更新
+        if (tabName === 'info-list') {
+          renderTabInfoList();
+        }
+      }
+
+      function showFab() {
+        document.getElementById('fab-add-info').classList.remove('hidden');
+      }
+
+      function hideFab() {
+        document.getElementById('fab-add-info').classList.add('hidden');
+      }
+
+      // ── 付加情報追加モーダル ──
+      function openAddInfoModal() {
+        editingInfoId = null;
+        document.getElementById('info-type-select').value = 'text';
+        document.getElementById('info-textarea').value = '';
+        document.getElementById('info-url-input').value = '';
+        selectedFile = null;
+        document.getElementById('info-file-preview').classList.add('hidden');
+        document.getElementById('info-file-input').value = '';
+        onInfoTypeChange();
+        
+        // タイトルを追加モードにリセット
+        document.querySelector('.info-dialog-title').textContent = '付加情報を追加';
+        document.querySelector('.info-dialog-sub').textContent = '解説の内容を向上させる情報を追加します';
+        document.querySelector('.info-submit-btn').textContent = '情報を追加して解説を更新';
+        
+        document.getElementById('add-info-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeAddInfoModal() {
+        document.getElementById('add-info-modal').classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+
+      function closeAddInfoModalIfOutside(e) {
+        if (e.target.classList.contains('info-dialog-overlay')) {
+          closeAddInfoModal();
+        }
+      }
+
+      function onInfoTypeChange() {
+        const type = document.getElementById('info-type-select').value;
+        document.getElementById('info-text-area').classList.toggle('hidden', type !== 'text');
+        document.getElementById('info-url-area').classList.toggle('hidden', type !== 'url');
+        document.getElementById('info-file-area').classList.toggle('hidden', type !== 'file');
+      }
+
+      function onFileSelected(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        selectedFile = file;
+        const previewEl = document.getElementById('info-file-preview');
+        const iconEl = document.getElementById('info-file-preview-icon');
+        const nameEl = document.getElementById('info-file-preview-name');
+        
+        // ファイルタイプに応じたアイコン
+        if (file.type === 'application/pdf') {
+          iconEl.textContent = '����';
+        } else if (file.type.startsWith('image/')) {
+          iconEl.textContent = '🖼️';
+        } else {
+          iconEl.textContent = '📎';
+        }
+        
+        nameEl.textContent = file.name;
+        previewEl.classList.remove('hidden');
+      }
+
+      function removeSelectedFile() {
+        selectedFile = null;
+        document.getElementById('info-file-preview').classList.add('hidden');
+        document.getElementById('info-file-input').value = '';
+      }
+
+      function submitSupplementaryInfo() {
+        const topicId = getTopicInfoKey();
+        if (!topicId) return;
+
+        const type = document.getElementById('info-type-select').value;
+        let info = { type };
+
+        if (type === 'text') {
+          const text = document.getElementById('info-textarea').value.trim();
+          if (!text) {
+            alert('テキストを入力してください');
+            return;
+          }
+          info.content = text;
+          info.preview = text.substring(0, 100) + (text.length > 100 ? '...' : '');
+        } else if (type === 'url') {
+          const url = document.getElementById('info-url-input').value.trim();
+          if (!url) {
+            alert('URLを入力してください');
+            return;
+          }
+          try {
+            new URL(url);
+          } catch {
+            alert('有効なURLを入力してください');
+            return;
+          }
+          info.content = url;
+          info.preview = url;
+        } else if (type === 'file') {
+          if (!selectedFile) {
+            alert('ファイルを選択してください');
+            return;
+          }
+          info.content = selectedFile.name;
+          info.preview = selectedFile.name;
+          info.fileType = selectedFile.type;
+          // 実際の実装ではファイルをアップロードする
+        }
+
+        if (editingInfoId) {
+          // 編集モード: 既存の情報を更新
+          updateSupplementaryInfo(topicId, editingInfoId, info);
+          editingInfoId = null;
+        } else {
+          // 追加モード
+          addSupplementaryInfo(topicId, info);
+        }
+        closeAddInfoModal();
+        showAnalyzingDialog(topicId);
+      }
+
+      // 解析中ダイアログを表示
+      function showAnalyzingDialog(topicId) {
+        const overlay = document.getElementById('analyzing-overlay');
+        overlay.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        // プログレスバーをリセット
+        const progressBar = overlay.querySelector('.analyzing-progress-bar');
+        progressBar.style.animation = 'none';
+        void progressBar.offsetWidth; // reflow
+        progressBar.style.animation = 'progressAnim 2.5s ease-in-out forwards';
+        
+        // 2.5秒後に解析完了として処理
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          document.body.style.overflow = '';
+          updateDetailContent(topicId);
+        }, 2500);
+      }
+
+      function updateDetailContent(topicId) {
+        const data = findData(topicId);
+        if (!data) return;
+
+        const infoList = getSupplementaryInfo(topicId);
+        
+        // 付加情報がある場合は「解説が向上した」ことを示すインジケーターを表示
+        // 実際のGemini API実装では、ここでAIが生成した新しい解説が表示される
+        let contentHTML = data.content;
+
+        if (infoList.length > 0) {
+          contentHTML = `
+            <div class="highlight" style="margin-bottom: 16px; border-left-color: var(--accent2);">
+              <strong style="color: var(--accent2);">Gemini APIにより解説が向上されました</strong><br>
+              <span style="font-size: 12px; color: var(--text-muted);">${infoList.length}件の付加情報を解析済み</span>
+            </div>
+          ` + data.content;
+        }
+
+        document.getElementById('detail-content').innerHTML = contentHTML;
+      }
+
+      // ── 付加情報一覧（タブ内表示） ──
+      let editingInfoId = null;
+      
+      function renderTabInfoList() {
+        const topicId = getTopicInfoKey();
+        const infoList = topicId ? getSupplementaryInfo(topicId) : [];
+        const bodyEl = document.getElementById('tab-info-list-body');
+
+        if (infoList.length === 0) {
+          bodyEl.innerHTML = `
+            <div class="info-list-empty">
+              <div class="info-list-empty-icon">📭</div>
+              <div class="info-list-empty-text">まだ付加情報がありません</div>
+            </div>
+            <button class="info-list-add-btn" onclick="openAddInfoModal()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              情報を追加する
+            </button>
+          `;
+          return;
+        }
+
+        let html = infoList.map(info => {
+          const typeLabel = info.type === 'text' ? 'テキスト' : 
+                           info.type === 'url' ? 'URL' : 'ファイル';
+          const icon = info.type === 'text' ? '📝' : 
+                      info.type === 'url' ? '🔗' : '📎';
+          const date = new Date(info.createdAt).toLocaleString('ja-JP', {
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+
+          return `
+            <div class="info-list-item">
+              <div class="info-list-item-header">
+                <div class="info-list-item-type">${icon} ${typeLabel}</div>
+                <div class="info-list-item-date">${date}</div>
+              </div>
+              <div class="info-list-item-content">${escapeHtml(info.preview)}</div>
+              <div class="info-list-item-actions">
+                <button class="info-list-item-btn" onclick="editInfo('${topicId}', '${info.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  編集
+                </button>
+                <button class="info-list-item-btn delete" onclick="deleteInfoAndRefresh('${topicId}', '${info.id}')">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                  </svg>
+                  削除
+                </button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        html += `
+          <button class="info-list-add-btn" onclick="openAddInfoModal()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            情報を追加する
+          </button>
+        `;
+        
+        bodyEl.innerHTML = html;
+      }
+
+      function editInfo(topicId, infoId) {
+        const infoList = getSupplementaryInfo(topicId);
+        const info = infoList.find(i => i.id === infoId);
+        if (!info) return;
+        
+        editingInfoId = infoId;
+        
+        // ダイアログを編集モードで開く
+        document.getElementById('info-type-select').value = info.type;
+        onInfoTypeChange();
+        
+        if (info.type === 'text') {
+          document.getElementById('info-textarea').value = info.content;
+        } else if (info.type === 'url') {
+          document.getElementById('info-url-input').value = info.content;
+        }
+        // ファイルは再選択が必要
+        
+        // ダイアログのタイトルを変更
+        document.querySelector('.info-dialog-title').textContent = '付加情報を編集';
+        document.querySelector('.info-dialog-sub').textContent = '情報の内容を更新します';
+        document.querySelector('.info-submit-btn').textContent = '変更を保存して解説を更新';
+        
+        document.getElementById('add-info-modal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function deleteInfoAndRefresh(topicId, infoId) {
+        if (!confirm('この付加情報を削除しますか？')) return;
+        removeSupplementaryInfo(topicId, infoId);
+        renderTabInfoList();
+        updateDetailContent(topicId);
+      }
+      
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      // ドラッグ＆ドロップ対応
+      const fileDropEl = document.getElementById('info-file-drop');
+      if (fileDropEl) {
+        fileDropEl.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          fileDropEl.classList.add('dragover');
+        });
+        fileDropEl.addEventListener('dragleave', () => {
+          fileDropEl.classList.remove('dragover');
+        });
+        fileDropEl.addEventListener('drop', (e) => {
+          e.preventDefault();
+          fileDropEl.classList.remove('dragover');
+          const file = e.dataTransfer.files[0];
+          if (file) {
+            const validTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/gif'];
+            if (validTypes.includes(file.type)) {
+              selectedFile = file;
+              const previewEl = document.getElementById('info-file-preview');
+              const iconEl = document.getElementById('info-file-preview-icon');
+              const nameEl = document.getElementById('info-file-preview-name');
+              
+              if (file.type === 'application/pdf') {
+                iconEl.textContent = '📄';
+              } else if (file.type.startsWith('image/')) {
+                iconEl.textContent = '🖼️';
+              } else {
+                iconEl.textContent = '📎';
+              }
+              
+              nameEl.textContent = file.name;
+              previewEl.classList.remove('hidden');
+            } else {
+              alert('PDF、PNG、JPG、GIF形式のファイルを選択してください');
+            }
+          }
+        });
+      }
     </script>
   </body>
 </html>
